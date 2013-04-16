@@ -1,0 +1,56 @@
+<j:jelly
+	xmlns:j="jelly:core"
+	xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define"
+	xmlns:l="/lib/layout"
+	xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form">
+	<h1 style="font-size: 190%;"> ${%Build Queue} 
+	</h1>
+	<table
+		id="queue_jobs_table"
+		border="1"
+		cellpadding="7"
+		style="border: 3px #bbb solid;">
+		<tr style="background-color: #3399FF;">
+			<th style="text-align: center; font-size: large;">
+			</th>
+			<th style="text-align: center; font-size: large;"> ${%status} </th>
+			<th style="text-align: center; font-size: large;"> ${%name} </th>
+			<th style="text-align: center; font-size: large;"> ${%block cause} </th>
+			<th style="text-align: center; font-size: large;"> ${%time waiting} </th>
+		</tr>
+		<j:choose>
+			<j:when test="${it.getBuildQueue().getNumberOfJobs() == 0}">
+				<tr>
+					<td colspan='5'>
+						<font style="color: black; font-size: 180%;"> ${%Nothing waiting to be built}. </font>
+					</td>
+				</tr>
+			</j:when>
+			<j:otherwise>
+				<j:forEach
+					items="${it.getBuildQueue().getAllQueueJobs()}"
+					var="job">
+					<tr
+						bgcolor="${job.getColor()}"
+						style="border-top: 1px; border: 1px #bbb solid;">
+						<td
+							bgcolor='white'
+							width='20px'
+							height='20px'
+							background='${it.getRootURL()}${job.getIcon()}'
+							style="background-position: center; background-repeat: no-repeat;">
+						</td>
+						<td style="text-align: center; font-size: large;"> ${job.getStatus()} </td>
+						<td style="text-align: center; font-size: medium;">
+							<a href="${it.getRootURL()}${job.getUrl()}"> ${job.getName()} </a>
+						</td>
+						<td style="text-align: center; font-size: 80%;"> ${job.getCauseOfBlockage()} </td>
+						<td style="text-align: center; font-size: large;"> ${job.getTime()} </td>
+					</tr>
+				</j:forEach>
+			</j:otherwise>
+		</j:choose>
+	</table>
+</j:jelly>

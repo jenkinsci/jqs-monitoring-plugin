@@ -1,0 +1,46 @@
+<j:jelly
+	xmlns:j="jelly:core"
+	xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define"
+	xmlns:l="/lib/layout"
+	xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form"
+	xmlns:i="jelly:fmt">
+	<l:header />
+	<l:side-panel>
+		<l:tasks>
+			<l:task
+				icon="${it.getIconsURL()}up-32x32.png"
+				href="${rootURL}"
+				title="${%Back to Jenkins}" />
+			<l:task
+				icon="${it.getIconsURL()}monitor.png"
+				href="${it.getRootURL()}${it.getUrlName()}"
+				title="${%Monitor all}" />
+			<l:task
+				icon="${it.getIconsURL()}monitor.png"
+				href="${it.getRootURL()}${it.getUrlName()}/monitor"
+				title="${%Monitor compact}" />
+			<l:task
+				icon="${it.getIconsURL()}queue.png"
+				href="${it.getRootURL()}${it.getUrlName()}/alone_queuejobs"
+				title="${%Queue}" />
+			<l:task
+				icon="${it.getIconsURL()}building.png"
+				href="${it.getRootURL()}${it.getUrlName()}/alone_buildtable"
+				title="${%Being built}" />
+			<l:task
+				icon="${it.getIconsURL()}computers.png"
+				href="${it.getRootURL()}${it.getUrlName()}/alone_slavestable"
+				title="${%Slaves}" />
+			<l:task
+				icon="${it.getIconsURL()}storm.png"
+				href="${it.getRootURL()}${it.getUrlName()}/alone_failhistory"
+				title="${%Failed Jobs}" />
+			<l:task
+				icon="${it.getIconsURL()}config.png"
+				href="${it.getRootURL()}${it.getUrlName()}/config"
+				title="${%Configure}" />
+		</l:tasks>
+	</l:side-panel>
+</j:jelly>

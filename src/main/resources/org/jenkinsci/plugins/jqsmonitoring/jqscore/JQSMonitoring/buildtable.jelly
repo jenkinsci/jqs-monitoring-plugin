@@ -1,0 +1,46 @@
+<j:jelly
+	xmlns:j="jelly:core"
+	xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define"
+	xmlns:l="/lib/layout"
+	xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form">
+	<h1 style=" font-size: 190%;"> ${%Jobs being built for too long: }</h1>
+	<table
+		id="slaves_table"
+		border="1"
+		cellpadding="7"
+		style="border: 3px #bbb solid;">
+		<tr style="background-color: #3399FF;">
+			<th style="text-align: center; font-size: large;"> ${%job name}</th>
+			<th style="text-align: center; font-size: large;"> ${%slave}</th>
+			<th style="text-align: center; font-size: large;"> ${%time running}</th>
+			<th style="text-align: center; font-size: large;"> ${%time remaining}</th>
+		</tr>
+		<j:choose>
+			<j:when test="${it.getJobsRunningTooLong() == null}">
+				<tr>
+					<td colspan='5'>
+						<font style="color: black; font-size: 180%;"> ${%Nothing being built for too long.}</font>
+					</td>
+				</tr>
+			</j:when>
+			<j:otherwise>
+				<j:forEach
+					items="${it.getJobsRunningTooLong()}"
+					var="currentJob">
+					<tr bgcolor="${currentJob.getColor()}">
+						<td style="text-align: center; font-size: medium;">
+							<a href="${it.getRootURL()}${currentJob.getJobUrl()}"> ${currentJob.getName()}</a>
+						</td>
+						<td style="text-align: center; font-size: medium;">
+							<a href="${it.getRootURL()}${currentJob.getSlaveUrl()}"> ${currentJob.getSlave().getDisplayName()}</a>
+						</td>
+						<td style="text-align: center; font-size: medium;"> ${currentJob.getRunningTime()}</td>
+						<td style="text-align: center; font-size: medium;"> ${currentJob.getRemainingTime()}</td>
+					</tr>
+				</j:forEach>
+			</j:otherwise>
+		</j:choose>
+	</table>
+</j:jelly>

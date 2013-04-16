@@ -1,0 +1,388 @@
+<j:jelly
+	xmlns:j="jelly:core"
+	xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define"
+	xmlns:l="/lib/layout"
+	xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form">
+	<l:layout>
+		<l:header title="JQS Monitoring" />
+		<st:include page="sidepanel.jelly" />
+		<l:main-panel>
+			<h1>${%JQS Configuration Page}</h1>
+			<form
+				action="${rootURL}/jqs-monitoring/configSubmit"
+				method="post">
+				<b> Configure Queue Jobs Monitoring </b>
+				<hr size='2'>
+				</hr>
+				<table>
+					<tr>
+						<td> ${%all color} 
+						</td>
+						<td>
+							<input
+								type="text"
+								name="allColor"
+								value="${it.getLocalConfig().getAllColor()}"
+								style="width:60px" />
+						</td>
+					</tr>
+					<tr>
+						<td> ${%ok color} 
+						</td>
+						<td>
+							<input
+								type="text"
+								name="okColor"
+								value="${it.getLocalConfig().getOkColor()}"
+								style="width:60px" />
+						</td>
+					</tr>
+					<tr>
+						<td> ${%blocked color} 
+						</td>
+						<td>
+							<input
+								type="text"
+								name="blockedColor"
+								value="${it.getLocalConfig().getBlockedColor()}"
+								style="width:60px" />
+						</td>
+					</tr>
+					<tr>
+						<td> ${%stuck color} 
+						</td>
+						<td>
+							<input
+								type="text"
+								name="stuckColor"
+								value="${it.getLocalConfig().getStuckColor()}"
+								style="width:60px" />
+						</td>
+					</tr>
+				</table>
+				<br />
+				<br />
+				<b> ${%Set Time Restrictions for Jobs being currently built} </b>
+				<hr size='2'>
+				</hr>
+				<table>
+					<tr>
+						<td> ${%Show jobs being built at least} 
+						</td>
+						<td>
+							<input
+								type="text"
+								name="timeFilter_1"
+								value="${it.getLocalConfig().getTimeFilter_1()}"
+								style="width:30px;" />
+							min
+						</td>
+					</tr>
+					<tr>
+						<td> ${%Show in red if being built more than} 
+						</td>
+						<td>
+							<input
+								type="text"
+								name="timeFilter_2"
+								value="${it.getLocalConfig().getTimeFilter_2()}"
+								style="width:30px;" />
+							min
+						</td>
+					</tr>
+				</table>
+				<br />
+				<br />
+				<br />
+				<b> ${%Configure Failed Jobs Monitoring} </b>
+				<hr size='2'>
+				</hr>
+				${%Show info about failed builds at }
+				<select name="updatefaileddaily">
+					<j:set
+						var="currentHour"
+						value="0" />
+					<j:while test="${currentHour lt 24}">
+						<f:option
+							value="${currentHour}"
+							selected="${it.getLocalConfig().getUpdateFailedDaily() == currentHour}"> ${currentHour}${%:00} </f:option>
+						<j:set
+							var="currentHour"
+							value="${currentHour + 1}" />
+					</j:while>
+				</select>
+				<br />
+				${%Adjust histogram dimensions:}
+				<br />
+				<table>
+					<tr>
+						<td> Width 
+						</td>
+						<td>
+							<input
+								name="histwidth"
+								type="range"
+								min="25"
+								max="65"
+								value="${it.getLocalConfig().getHistogramWidth()}"
+								step="1"
+								onchange="widthValue(this.value)" />
+							<span id="wrange"> ${it.getLocalConfig().getHistogramWidth()} </span>
+						</td>
+					</tr>
+					<tr>
+						<td> Height 
+						</td>
+						<td>
+							<input
+								name="histheight"
+								type="range"
+								min="250"
+								max="1200"
+								value="${it.getLocalConfig().getHistogramHeight()}"
+								step="10"
+								onchange="heightValue(this.value)" />
+							<span id="hrange"> ${it.getLocalConfig().getHistogramHeight()} </span>
+						</td>
+					</tr>
+				</table>
+				<script type="text/javascript"> function widthValue(newValue) {
+					document.getElementById("wrange").innerHTML=newValue; } 
+				</script>
+				<script type="text/javascript"> function heightValue(newValue) {
+					document.getElementById("hrange").innerHTML=newValue; } 
+				</script>
+				<table>
+					<tr>
+						<td> ${%Histogram background color} 
+						</td>
+						<td>
+							<input
+								type="text"
+								name="histBackground"
+								value="${it.getLocalConfig().getHistBackground()}"
+								style="width:60px" />
+						</td>
+					</tr>
+					<tr>
+						<td> ${%Histogram column color} 
+						</td>
+						<td>
+							<input
+								type="text"
+								name="histColumn"
+								value="${it.getLocalConfig().getHistColumn()}"
+								style="width:60px" />
+						</td>
+					</tr>
+					<tr>
+						<td> ${%Histogram hour text color} 
+						</td>
+						<td>
+							<input
+								type="text"
+								name="histHourText"
+								value="${it.getLocalConfig().getHistHourText()}"
+								style="width:60px" />
+						</td>
+					</tr>
+					<tr>
+						<td> ${%Histogram count text color} 
+						</td>
+						<td>
+							<input
+								type="text"
+								name="histNumberText"
+								value="${it.getLocalConfig().getHistNumberText()}"
+								style="width:60px" />
+						</td>
+					</tr>
+					<tr>
+						<td> ${%Histogram current column color} 
+						</td>
+						<td>
+							<input
+								type="text"
+								name="histCurrentColumn"
+								value="${it.getLocalConfig().getHistCurrentColumn()}"
+								style="width:60px" />
+						</td>
+					</tr>
+					<tr>
+						<td> Sort columns in Histogram according to 
+						</td>
+						<td>
+							<j:set
+								var="currentHour"
+								value="${it.getLocalConfig().getHistSorting()}" />
+							<select name="histSorting">
+								<f:option
+									value="1"
+									selected="${currentHour == 1}"> natural order </f:option>
+								<f:option
+									value="2"
+									selected="${currentHour == 2}"> current hour(first) </f:option>
+								<f:option
+									value="3"
+									selected="${currentHour == 3}"> current hour(last) </f:option>
+							</select>
+						</td>
+					</tr>
+				</table>
+				<br />
+				<br />
+				<b> ${%Show or hide elements} </b>
+				<hr size='2'>
+				</hr>
+				<table>
+					<tr>
+						<td>
+							<j:choose>
+								<j:when test="${it.getLocalConfig().isQueueSlaveAllEnabled()}">
+									<input
+										type="checkbox"
+										name="allqs"
+										value="true"
+										checked="true" />
+									show information about queue and slaves
+								</j:when>
+								<j:otherwise>
+									<input
+										type="checkbox"
+										name="allqs"
+										value="true" />
+									show information about queue and slaves
+								</j:otherwise>
+							</j:choose>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+							<j:choose>
+								<j:when test="${it.getLocalConfig().isQueueJobTableEnabled()}">
+									<input
+										type="checkbox"
+										name="queuejobstable"
+										value="true"
+										checked="false" />
+									show queue jobs table
+								</j:when>
+								<j:otherwise>
+									<input
+										type="checkbox"
+										name="queuejobstable"
+										value="true" />
+									show queue jobs table
+								</j:otherwise>
+							</j:choose>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+							<j:choose>
+								<j:when test="${it.getLocalConfig().isBuildTableEnabled()}">
+									<input
+										type="checkbox"
+										name="buildtable"
+										value="true"
+										checked="true" />
+									show jobs being built too long
+								</j:when>
+								<j:otherwise>
+									<input
+										type="checkbox"
+										name="buildtable"
+										value="true" />
+									show jobs being built too long
+								</j:otherwise>
+							</j:choose>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+							<j:choose>
+								<j:when test="${it.getLocalConfig().isSlaveTableEnabled()}">
+									<input
+										type="checkbox"
+										name="slavetable"
+										value="true"
+										checked="true" />
+									show slaves table
+								</j:when>
+								<j:otherwise>
+									<input
+										type="checkbox"
+										name="slavetable"
+										value="true" />
+									show slaves table
+								</j:otherwise>
+							</j:choose>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<j:choose>
+								<j:when test="${it.getLocalConfig().isFailedAllEnabled()}">
+									<input
+										type="checkbox"
+										name="allfailed"
+										value="true"
+										checked="true" />
+									show information about failed jobs
+								</j:when>
+								<j:otherwise>
+									<input
+										type="checkbox"
+										name="allfailed"
+										value="true" />
+									show information about failed jobs
+								</j:otherwise>
+							</j:choose>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+							<j:choose>
+								<j:when test="${it.getLocalConfig().isFailedHistogramEnabled()}">
+									<input
+										type="checkbox"
+										name="failedhistogram"
+										value="true"
+										checked="true" />
+									show histogram
+								</j:when>
+								<j:otherwise>
+									<input
+										type="checkbox"
+										name="failedhistogram"
+										value="true" />
+									show histogram
+								</j:otherwise>
+							</j:choose>
+						</td>
+					</tr>
+				</table>
+				<br />
+				<br />
+				<input
+					type="submit"
+					value="${%Save}" />
+			</form>
+			<br />
+			<br />
+			<form
+				action="${rootURL}/jqs-monitoring/setDefaults"
+				method="post">
+				<input
+					type="submit"
+					value="${%Set defaults}" />
+			</form>
+		</l:main-panel>
+	</l:layout>
+</j:jelly>

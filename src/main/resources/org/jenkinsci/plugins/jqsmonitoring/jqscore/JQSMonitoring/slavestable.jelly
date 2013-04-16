@@ -1,0 +1,67 @@
+<j:jelly
+	xmlns:j="jelly:core"
+	xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define"
+	xmlns:l="/lib/layout"
+	xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form">
+	<j:set
+		var="slavecount"
+		value="${it.getSlavesHolder().getNumberOfSlaves()}" />
+	<h1 style="font-size: 190%;">
+		<b> ${%Slaves: } ${it.getSlavesHolder().getNumberOfSlaves()}
+			(${it.getSlavesHolder().getNumberOfOnlineSlaves()} ${% online}) </b>
+	</h1>
+	<table
+		id="slaves_table"
+		border="1"
+		cellpadding="7"
+		style="border: 3px #bbb solid;">
+		<tr style="background-color: #3399FF;">
+			<th style="text-align: center; font-size: large;"> ${%slave} </th>
+			<th style="text-align: center; font-size: large;"> ${%executors} </th>
+			<th style="text-align: center; font-size: large;"> ${%status} </th>
+			<th style="text-align: center; font-size: large;"> ${%last build} </th>
+		</tr>
+		<j:choose>
+			<j:when test="${slavecount == 0}">
+				<tr>
+					<td colspan='4'>
+						<font style="color: black; font-size: 180%;"> ${%No slaves in this instance.} </font>
+					</td>
+				</tr>
+			</j:when>
+			<j:otherwise>
+				<j:forEach
+					items="${it.getSlavesHolder().getSlaves()}"
+					var="slave">
+					<j:set
+						var="countBusy"
+						value="0" />
+					<j:forEach
+						items="${slave.getComputer().getExecutors()}"
+						var="executor">
+						<j:if test="${executor.isBusy()}">
+							<j:set
+								var="countBusy"
+								value="${countBusy + 1}" />
+						</j:if>
+					</j:forEach>
+					<tr bgcolor="${it.getSlavesHolder().getColor(slave)}">
+						<td style="text-align: center; font-size: medium;">
+							<a
+								href="${it.getSlavesHolder().getRootURL()}${slave.getComputer().getUrl()}"> ${slave.getNodeName()} </a>
+						</td>
+						<td style="text-align: center; font-size: large;"> ${countBusy}/${slave.getNumExecutors()} </td>
+						<td style="text-align: center; font-size: large;"> ${slave.getComputer().isOffline() ? "offline" :
+							"online"} </td>
+						<td style="text-align: center; font-size: 70%;">
+							<a
+								href="${it.getSlavesHolder().getRootURL()}${it.getSlavesHolder().getUrl(slave)}"> ${it.getSlavesHolder().getLastBuild(slave)} </a>
+						</td>
+					</tr>
+				</j:forEach>
+			</j:otherwise>
+		</j:choose>
+	</table>
+</j:jelly>

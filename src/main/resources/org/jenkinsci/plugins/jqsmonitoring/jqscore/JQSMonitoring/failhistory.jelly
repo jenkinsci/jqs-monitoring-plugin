@@ -1,0 +1,49 @@
+<j:jelly
+	xmlns:j="jelly:core"
+	xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define"
+	xmlns:l="/lib/layout"
+	xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form">
+	<h1 style="margin-top: 30px; font-size: medium;">
+	</h1>
+	${it.getFailHistory().updateFailedJobs()}
+	<table>
+		<tr>
+			<td>
+				<font style="font-size: 190%;">
+					<b> ${%Failed jobs last 24 hours: Average }
+						${it.getFailHistory().getAverage24Hours()}, &amp;nbsp;${% Min }
+						${it.getFailHistory().getMinimum24Hours()}, &amp;nbsp;${% Max }
+						${it.getFailHistory().getMaximum24Hours()}
+					</b>
+				</font>
+			</td>
+			<td rowspan='2'>
+				<img
+					src="${it.getRootURL()}${it.getFailHistory().getTrendIcon()}"
+					alt="">
+				</img>
+			</td>
+			<td rowspan='2'>
+				<font
+					style="font-size: 190%; text-color: ${it.getFailHistory().getTrendIconColor()};">
+					<b> ${it.getFailHistory().getTrendIconMessage()}
+					</b>
+				</font>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<font style="font-size: 190%;">
+					<b> ${%Jobs currently marked as failed:
+						}${it.getFailHistory().getAllFailedJobsCount()} (${%enabled }
+						${it.getFailHistory().getFailedEnabledJobsCount()}, ${%disabled}
+						${it.getFailHistory().getFailedDisabledJobsCount()}) of
+						${it.getNumberOfAllJobs()}.
+					</b>
+				</font>
+			</td>
+		</tr>
+	</table>
+</j:jelly>

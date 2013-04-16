@@ -1,0 +1,69 @@
+<j:jelly
+	xmlns:j="jelly:core"
+	xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define"
+	xmlns:l="/lib/layout"
+	xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form">
+	<l:layout>
+		<l:header title='${%JQS Monitoring}'>
+		</l:header>
+		<st:include page="sidepanel.jelly" />
+		<l:main-panel>
+			<h1> ${%Jobs/Queue/Slaves Monitoring} </h1>
+			${it.refresh()}
+			<j:choose>
+				<j:when test="${it.getLocalConfig().isQueueSlaveAllEnabled()}">
+					<table>
+						<tr>
+							<td>
+								<st:include page="text_queueslave.jelly" />
+							</td>
+						</tr>
+						<!-- <j:choose> <j:when test="${it.getLocalConfig().isQueueTrendEnabled()}"> 
+							<tr> <td> <st:include page="jobchanges.jelly" /> </td> </tr> </j:when> </j:choose> -->
+					</table>
+					<table>
+						<j:choose>
+							<j:when test="${it.getLocalConfig().isQueueJobTableEnabled()}">
+								<tr>
+									<td colspan='2'>
+										<st:include page="queuejobs.jelly" />
+									</td>
+								</tr>
+							</j:when>
+						</j:choose>
+						<j:choose>
+							<j:when test="${it.getLocalConfig().isBuildTableEnabled()}">
+								<tr>
+									<td colspan='2'>
+										<st:include page="buildtable.jelly" />
+									</td>
+								</tr>
+							</j:when>
+						</j:choose>
+						<j:choose>
+							<j:when test="${it.getLocalConfig().isSlaveTableEnabled()}">
+								<tr>
+									<td>
+										<st:include page="slavestable.jelly" />
+									</td>
+								</tr>
+							</j:when>
+						</j:choose>
+					</table>
+				</j:when>
+			</j:choose>
+			<j:choose>
+				<j:when test="${it.getLocalConfig().isFailedAllEnabled()}">
+					<st:include page="failhistory.jelly" />
+					<j:choose>
+						<j:when test="${it.getLocalConfig().isFailedHistogramEnabled()}">
+							<st:include page="failedgraphic.jelly" />
+						</j:when>
+					</j:choose>
+				</j:when>
+			</j:choose>
+		</l:main-panel>
+	</l:layout>
+</j:jelly>

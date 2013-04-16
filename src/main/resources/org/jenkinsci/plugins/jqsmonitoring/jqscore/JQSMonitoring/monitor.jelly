@@ -1,0 +1,52 @@
+<j:jelly
+	xmlns:j="jelly:core"
+	xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define"
+	xmlns:l="/lib/layout"
+	xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form">
+	<l:layout>
+		<l:header title='${%JQS Monitoring}'>
+		</l:header>
+		<st:include page="sidepanel.jelly" />
+		<l:main-panel>
+			${it.refresh()}
+			<table
+				height="100%"
+				width="100%"
+				style="margin-left:-90px;">
+				<tr>
+					<td>
+						<table>
+							<tr>
+								<td>
+									<st:include page="slavestable.jelly" />
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<st:include page="queuejobs.jelly" />
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td>
+						<table style="margin-left:10px;">
+							<tr>
+								<td>
+									<st:include page="buildtable.jelly" />
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<st:include page="failhistory.jelly" />
+									<st:include page="failedgraphic.jelly" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</l:main-panel>
+	</l:layout>
+</j:jelly>

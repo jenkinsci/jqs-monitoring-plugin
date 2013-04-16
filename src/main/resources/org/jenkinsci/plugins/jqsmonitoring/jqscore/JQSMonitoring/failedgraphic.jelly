@@ -1,0 +1,18 @@
+<j:jelly
+	xmlns:j="jelly:core"
+	xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define"
+	xmlns:l="/lib/layout"
+	xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form">
+	<table>
+		<tr>
+			<td colspan='2'>
+				<img
+					src="${it.getFailedBuildHistogram()}"
+					alt="No Histogram File Found!">
+				</img>
+			</td>
+		</tr>
+	</table>
+</j:jelly>
