@@ -11,7 +11,6 @@ import hudson.model.Api;
 import hudson.model.Hudson;
 
 import org.jenkinsci.plugins.jqsmonitoring.beingbuilt.RunningJob;
-import org.jenkinsci.plugins.jqsmonitoring.beingbuilt.RunningJobsList;
 import org.jenkinsci.plugins.jqsmonitoring.buildqueue.BuildQueue;
 import org.jenkinsci.plugins.jqsmonitoring.failedbuilds.FailHistory;
 import org.jenkinsci.plugins.jqsmonitoring.slaves.SlavesHolder;
@@ -131,6 +130,17 @@ public class JQSMonitoring implements RootAction {
     }
 
     /**
+     * Returns a list of jobs that have been running for too long.
+     * 
+     * @return list with the jobs.
+     */
+    @Exported
+    public ArrayList<RunningJob> getJobsRunningTooLong() {
+        return RunningJob.getJobsRunningTooLong(SlavesHolder
+                .getInstance().getSlaves());
+    }
+    
+    /**
      * Returns the instance of FailHistory.
      * 
      * @return the instance
@@ -149,16 +159,6 @@ public class JQSMonitoring implements RootAction {
         return Constants.FAILED_JOB_GRAPHIC_1_URL;
     }
 
-    /**
-     * Returns a list of jobs that have been running for too long.
-     * 
-     * @return list with the jobs.
-     */
-    @Exported
-    public ArrayList<RunningJob> getJobsRunningTooLong() {
-        return new RunningJobsList().getJobsRunningTooLong(SlavesHolder
-                .getInstance().getSlaves());
-    }
 
     /**
      * Accepts the parameters from the local configuration page and passes them

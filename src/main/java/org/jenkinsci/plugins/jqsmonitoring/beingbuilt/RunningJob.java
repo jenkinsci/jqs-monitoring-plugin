@@ -75,6 +75,11 @@ public class RunningJob {
         }
     }
     
+    /**
+     * REST API.
+     * 
+     * @return new api instance.
+     */
     public Api getApi() {
         return new Api(this);
     }
@@ -150,6 +155,42 @@ public class RunningJob {
     @Exported
     public String getRemainingTime() {
         return this.remainingTime;
+    }
+    
+    /**
+     * Returns a list of jobs being build for too long.
+     * @param slaves
+     *            list of all slaves
+     * @return returns these jobs that have been being built for more than a
+     *         certain period of time. The period of time is determined by
+     *         TimeFilter_1 in the configuration.
+     */
+    public static ArrayList<RunningJob> getJobsRunningTooLong(ArrayList<Slave> slaves) {
+        LocalConfig lc = new LocalConfig();
+        final ArrayList<RunningJob> runningJobs = new ArrayList<RunningJob>();
+        if (slaves == null || slaves.size() == 0) {
+            return null;
+        }
+        for (final Iterator<Slave> i = slaves.iterator(); i.hasNext();) {
+            final Slave s = i.next();
+            final List<Executor> executors = s.toComputer().getExecutors();
+            if (executors == null || executors.size() == 0) {
+                continue;
+            }
+            for (final Iterator<Executor> p = executors.iterator(); p.hasNext();) {
+                final Executor exec = p.next();
+                if (exec != null
+                        && exec.getCurrentExecutable() != null
+                        && TimeUnit.MINUTES.toMillis(lc.getTimeFilter_1()) <= exec
+                                .getElapsedTime()) {
+                    runningJobs.add(new RunningJob(lc, exec, s));
+                }
+            }
+        }
+        if (runningJobs.size() == 0) {
+            return null;
+        }
+        return runningJobs;
     }
     
 }
