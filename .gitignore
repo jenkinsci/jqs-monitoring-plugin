@@ -1,8 +1,10 @@
 *.class
-
+.classpath
+.settings
+.project
 # Package Files #
 *.jar
 *.war
 *.ear
-/target
-/work
+target
+work
