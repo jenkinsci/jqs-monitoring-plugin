@@ -20,8 +20,6 @@
 								<st:include page="text_queueslave.jelly" />
 							</td>
 						</tr>
-						<!-- <j:choose> <j:when test="${it.getLocalConfig().isQueueTrendEnabled()}"> 
-							<tr> <td> <st:include page="jobchanges.jelly" /> </td> </tr> </j:when> </j:choose> -->
 					</table>
 					<table>
 						<j:choose>

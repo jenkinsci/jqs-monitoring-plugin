@@ -1,6 +1,7 @@
 package org.jenkinsci.plugins.jqsmonitoring.jqscore;
 
 import hudson.model.Hudson;
+import hudson.model.Project;
 
 import java.awt.Color;
 import java.io.File;

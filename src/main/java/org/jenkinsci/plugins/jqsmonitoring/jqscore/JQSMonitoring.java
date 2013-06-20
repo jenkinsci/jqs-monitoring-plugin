@@ -134,12 +134,19 @@ public class JQSMonitoring implements RootAction {
      * 
      * @return list with the jobs.
      */
+    // Exported does not work here, no idea why!?
     @Exported
     public ArrayList<RunningJob> getJobsRunningTooLong() {
-        return RunningJob.getJobsRunningTooLong(SlavesHolder
-                .getInstance().getSlaves());
+        return RunningJob.getJobsRunningTooLong(SlavesHolder.getInstance()
+                .getSlaves());
     }
-    
+
+    /*
+     * @Exported public ArrayList<String> getTestArrayListString() {
+     * ArrayList<String> s = new ArrayList<String>(); s.add("TestString1");
+     * s.add("ANDFIAEUEHFOEUFHU$HFWE"); return s; }
+     */
+
     /**
      * Returns the instance of FailHistory.
      * 
@@ -155,10 +162,10 @@ public class JQSMonitoring implements RootAction {
      * 
      * @return the address
      */
+    @Exported
     public String getFailedBuildHistogram() {
         return Constants.FAILED_JOB_GRAPHIC_1_URL;
     }
-
 
     /**
      * Accepts the parameters from the local configuration page and passes them

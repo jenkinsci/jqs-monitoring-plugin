@@ -8,11 +8,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.jenkinsci.plugins.jqsmonitoring.jqscore.LocalConfig;
-import org.kohsuke.stapler.export.Exported;
-import org.kohsuke.stapler.export.ExportedBean;
 
 
-import hudson.model.Api;
 import hudson.model.Executor;
 import hudson.model.Slave;
 
@@ -21,9 +18,8 @@ import hudson.model.Slave;
  * @author yboev
  *
  */
-@ExportedBean
 public class RunningJob {
-
+    
     /**
      * name of the job.
      */
@@ -76,21 +72,10 @@ public class RunningJob {
     }
     
     /**
-     * REST API.
-     * 
-     * @return new api instance.
-     */
-    public Api getApi() {
-        return new Api(this);
-    }
-
-    
-    /**
      * Returns the slave url on which this job runs.
      * 
      * @return The url as String.
      */
-    @Exported
     public String getSlaveUrl() {
         return this.slave.getComputer().getUrl();
     }
@@ -100,7 +85,6 @@ public class RunningJob {
      * 
      * @return the url as String.
      */
-    @Exported
     public String getJobUrl() {
         return this.jobUrl;
     }
@@ -117,7 +101,6 @@ public class RunningJob {
      * Returns the name of the job.
      * @return the name as string
      */
-    @Exported
     public String getName() {
         return this.name;
     }
@@ -126,7 +109,6 @@ public class RunningJob {
      * Returns the slave.
      * @return slave on which this job has been running.
      */
-    @Exported
     public Slave getSlave() {
         return this.slave;
     }
@@ -135,7 +117,6 @@ public class RunningJob {
      * Returns the time this job as been running. Returns it as a string that is human readable.
      * @return elapsed time in h m s format. where h can be > 24.
      */
-    @Exported
     public String getRunningTime() {
         long hours, mins, secs, time;
         time = this.runningTime;
@@ -152,7 +133,6 @@ public class RunningJob {
      * return the remaining time as string that is human readable.
      * @return the remaining time. it will return N/A if this could not be determined.
      */
-    @Exported
     public String getRemainingTime() {
         return this.remainingTime;
     }

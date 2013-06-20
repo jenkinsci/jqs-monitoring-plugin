@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.jqsmonitoring.failedbuilds;
 
+import hudson.model.AbstractProject;
 import hudson.model.Api;
 import hudson.model.Hudson;
 import hudson.model.Project;
@@ -22,8 +23,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
+
+import jenkins.model.Jenkins;
 
 import org.jenkinsci.plugins.jqsmonitoring.jqscore.Constants;
 import org.jenkinsci.plugins.jqsmonitoring.jqscore.LocalConfig;
@@ -45,8 +49,8 @@ public class FailHistory {
     private int failedEnabledJobs, failedDisabledJobs;
     private LocalConfig lc;
 
-    // private static final Logger LOGGER = Logger.getLogger(FailHistory.class
-    // .getName());
+    private static final Logger LOGGER = Logger.getLogger(FailHistory.class
+            .getName());
 
     public FailHistory() {
         this.lc = new LocalConfig();
@@ -70,11 +74,12 @@ public class FailHistory {
         }
         return Constants.EQUAL_FAILED_ICON;
     }
-    
+
     public Api getApi() {
         return new Api(this);
     }
-    
+
+    @Exported
     public int getLastHourFailed() {
         return this.get24Hours("today")[this.getCurrentHour()];
     }
@@ -112,22 +117,34 @@ public class FailHistory {
     public void updateFailedJobs() {
         this.failedEnabledJobs = 0;
         this.failedDisabledJobs = 0;
-        final List<Project> projectList = Hudson.getInstance().getProjects();
-        for (final Iterator<Project> i = projectList.iterator(); i.hasNext();) {
-            final Project<?, ?> p = i.next();
-            if (p != null
-                    && p.getLastBuild() != null
-                    && p.getLastBuild().getResult() != null
-                    && p.getLastBuild().getResult()
-                            .isWorseOrEqualTo(Result.FAILURE)) {
-                if (!p.isDisabled()) {
-                    this.failedEnabledJobs++;
-                } else {
-                    this.failedDisabledJobs++;
+        for (AbstractProject<?, ?> p : Jenkins.getInstance().getAllItems(
+                AbstractProject.class)) {
+            // LOGGER.info("Assering project: " + p.getName());
+            try {
+                if (p.getLastCompletedBuild().getResult()
+                        .isWorseOrEqualTo(Result.FAILURE)) {
+                    // LOGGER.info("Project marked as failed: " + p.getName());
+                    if (!p.isDisabled()) {
+                        this.failedEnabledJobs++;
+                    } else {
+                        this.failedDisabledJobs++;
+                    }
+                    // LOGGER.info("NUMER OF FAILED JOBS:" +
+                    // (this.failedDisabledJobs + this.failedEnabledJobs));
                 }
+            } catch (NullPointerException e) {
+                // something was null, data cannot be retrieved. Nothing can be
+                // done here. Abnormal flow.
+                String projectName = null;
+                if (p != null) {
+                    projectName = p.getName();
+                }
+                LOGGER.warning("Last completed build result could not be retrieved for project: "
+                        + projectName);
             }
         }
     }
+
     @Exported
     public int getAverage24Hours() {
         final int[] today = this.get24Hours("today");
@@ -137,6 +154,7 @@ public class FailHistory {
         }
         return sum / Constants.HOURS_PER_DAY;
     }
+
     @Exported
     public int getMinimum24Hours() {
         final int[] today = this.get24Hours("today");
@@ -148,6 +166,7 @@ public class FailHistory {
         }
         return min;
     }
+
     @Exported
     public int getMaximum24Hours() {
         final int[] today = this.get24Hours("today");
@@ -310,7 +329,7 @@ public class FailHistory {
         }
 
         final int widthMultiplicator = this.lc.getHistogramWidth();
-        final int histWidth = 24 * widthMultiplicator;
+        final int histWidth = Constants.HOURS_PER_DAY * widthMultiplicator;
         final int histHeight = this.lc.getHistogramHeight();
         final BufferedImage image = new BufferedImage(histWidth, histHeight,
                 BufferedImage.TYPE_INT_RGB);
@@ -355,12 +374,14 @@ public class FailHistory {
             }
 
             g2d.fillRect(0 + j * widthMultiplicator, histHeight
-                    - widthMultiplicator - (int) (hours[i] * heightMultiplicator),
+                    - widthMultiplicator
+                    - (int) (hours[i] * heightMultiplicator),
                     widthMultiplicator, (int) (hours[i] * heightMultiplicator));
             // draws a gap between the rectangles
             g2d.setColor(background);
             g2d.drawRect(0 + j * widthMultiplicator, histHeight
-                    - widthMultiplicator - (int) (hours[i] * heightMultiplicator),
+                    - widthMultiplicator
+                    - (int) (hours[i] * heightMultiplicator),
                     widthMultiplicator, (int) (hours[i] * heightMultiplicator));
 
             // puts hours on the x-axis
