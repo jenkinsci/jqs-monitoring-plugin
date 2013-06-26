@@ -2,8 +2,6 @@ package org.jenkinsci.plugins.jqsmonitoring.failedbuilds;
 
 import hudson.model.AbstractProject;
 import hudson.model.Api;
-import hudson.model.Hudson;
-import hudson.model.Project;
 import hudson.model.Result;
 
 import java.awt.Color;
@@ -19,8 +17,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
@@ -123,14 +119,15 @@ public class FailHistory {
             try {
                 if (p.getLastCompletedBuild().getResult()
                         .isWorseOrEqualTo(Result.FAILURE)) {
-                    LOGGER.info("Project marked as failed: " + p.getName());
+                    // LOGGER.info("Project marked as failed: " + p.getName());
                     if (!p.isDisabled()) {
                         this.failedEnabledJobs++;
                     } else {
                         this.failedDisabledJobs++;
                     }
-                    LOGGER.info("NUMER OF FAILED JOBS: ["
-                            + this.failedDisabledJobs + "] " + this.failedEnabledJobs);
+                    // LOGGER.info("NUMER OF FAILED JOBS: ["
+                    // + this.failedDisabledJobs + "] " +
+                    // this.failedEnabledJobs);
                 }
             } catch (NullPointerException e) {
                 // something was null, data cannot be retrieved. Nothing can be

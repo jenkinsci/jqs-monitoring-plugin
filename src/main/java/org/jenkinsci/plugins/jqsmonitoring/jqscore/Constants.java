@@ -1,13 +1,10 @@
 package org.jenkinsci.plugins.jqsmonitoring.jqscore;
 
 import hudson.model.Hudson;
-import hudson.model.Project;
 
 import java.awt.Color;
 import java.io.File;
 import java.util.logging.Logger;
-
-import org.jenkinsci.plugins.jqsmonitoring.failedbuilds.FailHistory;
 
 import jenkins.model.Jenkins;
 
