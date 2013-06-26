@@ -5,6 +5,9 @@ import hudson.model.Project;
 
 import java.awt.Color;
 import java.io.File;
+import java.util.logging.Logger;
+
+import org.jenkinsci.plugins.jqsmonitoring.failedbuilds.FailHistory;
 
 import jenkins.model.Jenkins;
 
@@ -13,6 +16,9 @@ public final class Constants {
     private Constants() {
         // holds constants
     }
+    
+    private static final Logger LOGGER = Logger.getLogger(Constants.class
+            .getName());
 
     public static final String rootURL = getHudsonAddr();
     public static final String URL = "/jqs-monitoring";
@@ -81,9 +87,12 @@ public final class Constants {
     public static final String SLAVE_OK_COLOR = "#66CC00";
 
     private static String getHome() {
-        String s = System.getProperty("HUDSON_HOME");
+        String s = Jenkins.getInstance().getRootDir().getPath();
         if (s == null) {
             s = System.getProperty("JENKINS_HOME");
+        }
+        if (s == null) {
+            s = System.getProperty("HUDSON_HOME");
         }
         if (s == null) {
             s = (new File(System.getProperty("user.dir"))).getParent();
@@ -96,8 +105,6 @@ public final class Constants {
     }
 
     private static String getHudsonAddr() {
-        if (Jenkins.getInstance() == null && Hudson.getInstance() == null)
-            return "HudsonAndJenkinsAreNull";
         String s;
         try {
             s = Hudson.getInstance().getRootUrlFromRequest();

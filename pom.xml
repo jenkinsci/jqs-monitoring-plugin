@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>1.425</version><!-- which version of Jenkins is this plugin built 
+		<version>1.518</version><!-- which version of Jenkins is this plugin built 
 			against? -->
 	</parent>
 	<name> Job/Queue/Slaves Monitoring Plugin</name>

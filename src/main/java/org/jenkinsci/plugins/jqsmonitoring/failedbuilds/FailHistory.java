@@ -123,14 +123,14 @@ public class FailHistory {
             try {
                 if (p.getLastCompletedBuild().getResult()
                         .isWorseOrEqualTo(Result.FAILURE)) {
-                    // LOGGER.info("Project marked as failed: " + p.getName());
+                    LOGGER.info("Project marked as failed: " + p.getName());
                     if (!p.isDisabled()) {
                         this.failedEnabledJobs++;
                     } else {
                         this.failedDisabledJobs++;
                     }
-                    // LOGGER.info("NUMER OF FAILED JOBS:" +
-                    // (this.failedDisabledJobs + this.failedEnabledJobs));
+                    LOGGER.info("NUMER OF FAILED JOBS: ["
+                            + this.failedDisabledJobs + "] " + this.failedEnabledJobs);
                 }
             } catch (NullPointerException e) {
                 // something was null, data cannot be retrieved. Nothing can be
