@@ -235,19 +235,20 @@ public class LocalConfig implements Saveable {
             e.printStackTrace();
         }
     }
-    
+
     private XmlFile getConfigXml() {
         return new XmlFile(Hudson.XSTREAM, new File(Constants.file_LOCALCONFIG));
     }
 
     private boolean load() throws IOException {
-        try {XmlFile xml = getConfigXml();
-        if (xml.exists()) {
-            xml.unmarshal(this); // Loads the contents of this file into an
-                                 // existing object.
-            return true;
-        }
-        } catch(CannotResolveClassException e) {
+        try {
+            XmlFile xml = getConfigXml();
+            if (xml.exists()) {
+                xml.unmarshal(this); // Loads the contents of this file into an
+                                     // existing object.
+                return true;
+            }
+        } catch (CannotResolveClassException e) {
             return false;
         }
         return false;

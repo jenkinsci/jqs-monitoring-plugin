@@ -7,18 +7,19 @@ import java.io.File;
 import java.util.logging.Logger;
 
 import jenkins.model.Jenkins;
+import jenkins.model.JenkinsLocationConfiguration;
 
 public final class Constants {
 
     private Constants() {
         // holds constants
     }
-    
+
     private static final Logger LOGGER = Logger.getLogger(Constants.class
             .getName());
 
-    public static final String rootURL = getHudsonAddr();
-    public static final String URL = "/jqs-monitoring";
+    public static final String rootURL = getRootUrl();
+    public static final String URL = "jqs-monitoring";
     public static final String DISPLAYNAME = "JQS Monitoring";
     public static final String ICONS = "plugin/jqs-monitoring/icons/";
 
@@ -28,12 +29,11 @@ public final class Constants {
     public static final long UPATE_TIME_MED = 1000 * 60 * 10;
     public static final long UPATE_TIME_BIG = 1000 * 60 * 30;
 
-    
     public static final String NOWTAG_NAME = "now";
     public static final String MEDTAG_NAME = "10 min";
     public static final String BIGTAG_NAME = "30 min";
 
-    //Different statuses of a queue jobs
+    // Different statuses of a queue jobs
     public static final String STATUS0 = "overall";
     public static final String STATUS1 = "ok";
     public static final String STATUS2 = "blocked";
@@ -62,25 +62,27 @@ public final class Constants {
     public static final String file_longterm = BASE + "longterm";
     public static final String file_24hours = BASE + "24hours";
     public static final String file_tmp = BASE + "tmp";
-    
+
     public static final int HOURS_PER_DAY = 24;
 
     public static final String LESS_FAILED_ICON = ICONS
             + "arrow_down_32x32.png";
     public static final String MORE_FAILED_ICON = ICONS
             + "red_arrow_up_32x32.png";
-    public static final String EQUAL_FAILED_ICON = null; //ICONS + "red_equal_24x32.png";
+    public static final String EQUAL_FAILED_ICON = null; // ICONS +
+                                                         // "red_equal_24x32.png";
     public static final String LESS_FAILED_COLOR = "green";
     public static final String MORE_FAILED_COLOR = "red";
-    
-    
+
     public static final Color GRAPHIC_1_BGCOLOR = Color.WHITE;
     public static final Color GRAPHIC_1_COLOR = Color.BLACK;
 
     public static final String file_LOCALCONFIG = BASE + "jqs_localconf.xml";
-    
-    public static final String SLAVE_OFFLINE_COLOR = "#" + (Integer.toHexString(Color.RED.getRGB()).substring(2, 7));
-    public static final String SLAVE_NOEXECUTORS_COLOR = "#" + (Integer.toHexString(Color.ORANGE.getRGB()).substring(2, 7));
+
+    public static final String SLAVE_OFFLINE_COLOR = "#"
+            + (Integer.toHexString(Color.RED.getRGB()).substring(2, 7));
+    public static final String SLAVE_NOEXECUTORS_COLOR = "#"
+            + (Integer.toHexString(Color.ORANGE.getRGB()).substring(2, 7));
     public static final String SLAVE_OK_COLOR = "#66CC00";
 
     private static String getHome() {
@@ -101,15 +103,18 @@ public final class Constants {
         return s;
     }
 
-    private static String getHudsonAddr() {
-        String s;
-        try {
-            s = Hudson.getInstance().getRootUrlFromRequest();
-        } catch (NullPointerException e) {
-            s = Hudson.getInstance().getRootUrl();
+    private static String getRootUrl() {
+        String s = Jenkins.getInstance().getRootUrl();
+        if (s == null) {
+            s = JenkinsLocationConfiguration.get().getUrl();
         }
-        if (s == null)
-            s = Jenkins.getInstance().getRootUrl();
+        // other methods just return null, done just for running under developer mode
+        // hardcoded and obviously working only when jenkins runs on 8080
+        // info
+        // https://wiki.jenkins-ci.org/display/JENKINS/Hyperlinks+in+HTML
+        if(s == null) {
+            s = "http://localhost:8080/jenkins";
+        }
         if (s != null && !s.endsWith("/"))
             s = s + "/";
         return s;

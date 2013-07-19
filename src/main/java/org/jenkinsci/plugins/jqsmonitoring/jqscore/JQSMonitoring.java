@@ -19,8 +19,6 @@ import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
-import java.util.logging.Logger;
-
 /**
  * Main class of the Plugin. Extension Point.
  * 
@@ -84,6 +82,7 @@ public class JQSMonitoring implements RootAction {
      * 
      * @return the url name.
      */
+    @Exported
     public String getUrlName() {
         return Constants.URL;
     }
@@ -93,7 +92,7 @@ public class JQSMonitoring implements RootAction {
      * 
      * @return the BuildQueue instance
      */
-    @Exported
+    @Exported(inline=true)
     public BuildQueue getBuildQueue() {
         this.buildQueue.refresh();
         return this.buildQueue;
@@ -104,6 +103,7 @@ public class JQSMonitoring implements RootAction {
      * 
      * @return the url.
      */
+    @Exported
     public String getRootURL() {
         // LOGGER.info(Constants.rootURL);
         return Constants.rootURL;
@@ -114,8 +114,8 @@ public class JQSMonitoring implements RootAction {
      * 
      * @return the url where icons can be found.
      */
+    @Exported
     public String getIconsURL() {
-        // LOGGER.info(Constants.ICONS);
         return Constants.ICONS;
     }
 
@@ -134,8 +134,7 @@ public class JQSMonitoring implements RootAction {
      * 
      * @return list with the jobs.
      */
-    // Exported does not work here, no idea why!?
-    @Exported
+    @Exported(inline=true)
     public ArrayList<RunningJob> getJobsRunningTooLong() {
         return RunningJob.getJobsRunningTooLong(SlavesHolder.getInstance()
                 .getSlaves());
@@ -152,7 +151,7 @@ public class JQSMonitoring implements RootAction {
      * 
      * @return the instance
      */
-    @Exported
+    @Exported(inline=true)
     public FailHistory getFailHistory() {
         return this.failedHistory;
     }
@@ -225,7 +224,7 @@ public class JQSMonitoring implements RootAction {
      * 
      * @return the instance.
      */
-    @Exported
+    @Exported(inline=true)
     public SlavesHolder getSlavesHolder() {
         return SlavesHolder.getInstance();
     }

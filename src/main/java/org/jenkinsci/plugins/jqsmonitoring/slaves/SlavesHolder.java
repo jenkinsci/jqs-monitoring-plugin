@@ -73,17 +73,6 @@ public final class SlavesHolder extends ComputerListener {
         sort();
     }
     
-    /**
-     * Sort method for the slaves list.
-     */
-    private void sort() {
-        final Comparator<Slave> c = new Comparator<Slave>() {
-            public int compare(Slave s1, Slave s2) {
-                return s1.getNodeName().compareTo(s2.getNodeName());
-            }
-        };
-        Collections.sort(this.slaves, c);
-    }
 
     /**
      * List with all slaves.
@@ -173,6 +162,18 @@ public final class SlavesHolder extends ComputerListener {
         return Constants.SLAVE_OK_COLOR;
     }
 
+    /**
+     * Sort method for the slaves list.
+     */
+    private void sort() {
+        final Comparator<Slave> c = new Comparator<Slave>() {
+            public int compare(Slave s1, Slave s2) {
+                return s1.getNodeName().compareTo(s2.getNodeName());
+            }
+        };
+        Collections.sort(this.slaves, c);
+    }
+    
     /**
      * Checks if all executors of a slave are busy.
      * 

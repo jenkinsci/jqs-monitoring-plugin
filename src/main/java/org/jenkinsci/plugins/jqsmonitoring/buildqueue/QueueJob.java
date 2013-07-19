@@ -142,6 +142,7 @@ public class QueueJob implements Comparable<QueueJob> {
      * 
      * @return the color as String
      */
+    @Exported
     public String getColor() {
         // LOGGER.info("Color is:" + "#" +
         // Integer.toHexString(this.color.getRGB()));
@@ -179,6 +180,7 @@ public class QueueJob implements Comparable<QueueJob> {
      * 
      * @return address of the icon
      */
+    @Exported
     public String getIcon() {
         if (this.status == Constants.STATUS1) {
             return Constants.okIcon;

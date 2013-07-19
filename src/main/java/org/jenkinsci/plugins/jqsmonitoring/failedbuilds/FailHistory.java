@@ -17,8 +17,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
@@ -115,24 +118,18 @@ public class FailHistory {
         this.failedDisabledJobs = 0;
         for (AbstractProject<?, ?> p : Jenkins.getInstance().getAllItems(
                 AbstractProject.class)) {
-            // LOGGER.info("Assering project: " + p.getName());
             try {
                 if (p.getLastCompletedBuild().getResult()
-                        .isWorseOrEqualTo(Result.FAILURE)) {
-                    // LOGGER.info("Project marked as failed: " + p.getName());
+                        .isWorseOrEqualTo(Result.FAILURE) && !(p.getParent() instanceof AbstractProject)) {
                     if (!p.isDisabled()) {
                         this.failedEnabledJobs++;
                     } else {
                         this.failedDisabledJobs++;
                     }
-                    // LOGGER.info("NUMER OF FAILED JOBS: ["
-                    // + this.failedDisabledJobs + "] " +
-                    // this.failedEnabledJobs);
                 }
             } catch (NullPointerException e) {
-                // something was null, data cannot be retrieved. Nothing can be
-                // done here. Abnormal flow.
-                String projectName = null;
+                // Abnormal flow.
+                String projectName = "project was NULL";
                 if (p != null) {
                     projectName = p.getName();
                 }
@@ -140,6 +137,17 @@ public class FailHistory {
                         + projectName);
             }
         }
+    }
+    
+    @Exported
+    public Map<Integer, Integer> getNumberOfFailedJobsLast24Hours() {
+        int failedJobsCount[] =  get24Hours("today");
+        Map<Integer, Integer> rslt = new TreeMap<Integer, Integer>();
+        for(int i = 0; i < Constants.HOURS_PER_DAY; i++) {
+            rslt.put(new Integer(i), new Integer(failedJobsCount[i]));
+        }
+       
+        return rslt;
     }
 
     @Exported
@@ -186,6 +194,7 @@ public class FailHistory {
         return null;
     }
 
+    @Exported
     public String getTrendIconMessage() {
         if (getTrendIcon() == Constants.LESS_FAILED_ICON) {
             return this.getLastHourFailed() - this.failedEnabledJobs

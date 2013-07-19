@@ -63,8 +63,8 @@ public class BuildQueue {
      * 
      * @return the list
      */
-    @Exported
-    public ArrayList<QueueJob> getAllQueueJobs() {
+    @Exported(inline=true)
+    public ArrayList<QueueJob> getQueueJobs() {
         return this.jobs;
     }
 

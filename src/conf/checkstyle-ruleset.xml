@@ -135,7 +135,7 @@
 
     <!-- Generates quite a few errors -->
     <module name="CyclomaticComplexity">
-      <property name="max" value="18"/>
+      <property name="max" value="11"/>
       <property name="severity" value="error"/>
     </module>
 

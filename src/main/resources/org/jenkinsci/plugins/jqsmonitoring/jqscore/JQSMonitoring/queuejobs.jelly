@@ -30,7 +30,7 @@
 			</j:when>
 			<j:otherwise>
 				<j:forEach
-					items="${it.getBuildQueue().getAllQueueJobs()}"
+					items="${it.getBuildQueue().getQueueJobs()}"
 					var="job">
 					<tr
 						bgcolor="${job.getColor()}"
