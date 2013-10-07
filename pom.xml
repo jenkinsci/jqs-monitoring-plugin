@@ -9,7 +9,7 @@
 	<name> Job/Queue/Slaves Monitoring Plugin</name>
 	<groupId>org.jenkins-ci.plugins</groupId>
 	<artifactId>jqs-monitoring</artifactId>
-	<version>1.4</version>
+	<version>1.5-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 	<url>
 	https://wiki.jenkins-ci.org/display/JENKINS/JQS+Monitoring+Plugin
