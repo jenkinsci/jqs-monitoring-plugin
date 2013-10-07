@@ -10,7 +10,7 @@
 		value="${it.getSlavesHolder().getNumberOfSlaves()}" />
 	<h1 style="font-size: 190%;">
 		<b> ${%Slaves: } ${it.getSlavesHolder().getNumberOfSlaves()}
-			(${it.getSlavesHolder().getNumberOfOnlineSlaves()} ${% online}) </b>
+			(${it.getSlavesHolder().getNumberOfOnlineSlaves()} ${% online} / ${it.getSlavesHolder().getNumberOfOfflineSlaves()} ${% offline}) </b>
 	</h1>
 	<table
 		id="slaves_table"
