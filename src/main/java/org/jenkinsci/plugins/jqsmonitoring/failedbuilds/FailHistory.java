@@ -120,7 +120,8 @@ public class FailHistory {
                 AbstractProject.class)) {
             try {
                 if (p.getLastCompletedBuild().getResult()
-                        .isWorseOrEqualTo(Result.FAILURE) && !(p.getParent() instanceof AbstractProject)) {
+                        .isWorseOrEqualTo(Result.FAILURE)
+                        && !(p.getParent() instanceof AbstractProject)) {
                     if (!p.isDisabled()) {
                         this.failedEnabledJobs++;
                     } else {
@@ -139,17 +140,20 @@ public class FailHistory {
                 // + projectName);
             }
         }
-        LOGGER.info("Failed to retrieve last completed build for " + cannotRetrieveCompletedBuild + " projects.");
+        if (cannotRetrieveCompletedBuild > 0) {
+            LOGGER.info("Failed to retrieve last completed build for "
+                    + cannotRetrieveCompletedBuild + " projects.");
+        }
     }
-    
+
     @Exported
     public Map<Integer, Integer> getNumberOfFailedJobsLast24Hours() {
-        int failedJobsCount[] =  get24Hours("today");
+        int failedJobsCount[] = get24Hours("today");
         Map<Integer, Integer> rslt = new TreeMap<Integer, Integer>();
-        for(int i = 0; i < Constants.HOURS_PER_DAY; i++) {
+        for (int i = 0; i < Constants.HOURS_PER_DAY; i++) {
             rslt.put(new Integer(i), new Integer(failedJobsCount[i]));
         }
-       
+
         return rslt;
     }
 
