@@ -143,6 +143,22 @@ public final class SlavesHolder extends ComputerListener {
         }
         return count;
     }
+    
+    /**
+     * Return number of offline slaves.
+     * 
+     * @return number of offline slaves as int.
+     */
+    @Exported
+    public int getNumberOfOfflineSlaves() {
+        int count = 0;
+        for (Slave s : slaves) {
+            if (s.getComputer().isOffline()) {
+                count++;
+            }
+        }
+        return count;
+    }
 
     /**
      * Return the color assotiated with this slave . red - offline orange - all

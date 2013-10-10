@@ -8,3 +8,5 @@
 *.ear
 target
 work
+
+release.properties
