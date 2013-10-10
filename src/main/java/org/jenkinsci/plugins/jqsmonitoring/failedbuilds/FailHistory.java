@@ -17,7 +17,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -116,6 +115,7 @@ public class FailHistory {
     public void updateFailedJobs() {
         this.failedEnabledJobs = 0;
         this.failedDisabledJobs = 0;
+        int cannotRetrieveCompletedBuild = 0;
         for (AbstractProject<?, ?> p : Jenkins.getInstance().getAllItems(
                 AbstractProject.class)) {
             try {
@@ -129,14 +129,17 @@ public class FailHistory {
                 }
             } catch (NullPointerException e) {
                 // Abnormal flow.
-                String projectName = "project was NULL";
-                if (p != null) {
-                    projectName = p.getName();
-                }
-                LOGGER.warning("Last completed build result could not be retrieved for project: "
-                        + projectName);
+                cannotRetrieveCompletedBuild++;
+                // String projectName = "project was NULL";
+                // if (p != null) {
+                // projectName = p.getName();
+                // }
+                //
+                // LOGGER.warning("Last completed build result could not be retrieved for project: "
+                // + projectName);
             }
         }
+        LOGGER.info("Failed to retrieve last completed build for " + cannotRetrieveCompletedBuild + " projects.");
     }
     
     @Exported
@@ -238,9 +241,9 @@ public class FailHistory {
 
             @Override
             public void run() {
-                // LOGGER.info("Gathering information about failed builds...");
+                LOGGER.info("Gathering information about failed builds...");
                 updateFailedJobs();
-                // LOGGER.info("Writing information about failed builds...");
+                LOGGER.info("Writing information about failed builds...");
                 writeData();
             }
 
@@ -297,8 +300,9 @@ public class FailHistory {
         if (tmp != null) {
             tmp.renameTo(this.file_24hours);
         }
-        // LOGGER.info("Information written successfully. Writing image...");
+        LOGGER.info("Information written successfully. Writing image...");
         this.createHourGraphic1();
+        LOGGER.info("Image written successfully!");
     }
 
     /**
