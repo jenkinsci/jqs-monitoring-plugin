@@ -61,8 +61,17 @@
 		<maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
 		<maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
 		<maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
+                <netbeans.hint.jdkPlatform>JDK_1.7</netbeans.hint.jdkPlatform>
+                <netbeans.hint.license>mit</netbeans.hint.license>
 	</properties>
-	
+        <dependencies>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.3</version>
+            </dependency>
+        </dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -200,4 +209,5 @@
 			</plugin>
 		</plugins>
 	</reporting>
+
 </project>
