@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package org.jenkinsci.plugins.jqsmonitoring.jqscore;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import hudson.Extension;
 import hudson.model.Node;
 import hudson.model.RootAction;
@@ -34,12 +35,18 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
+import org.jenkinsci.plugins.jqsmonitoring.beingbuilt.RunningJob;
+import org.jenkinsci.plugins.jqsmonitoring.failedbuilds.FailHistory;
 
 /**
  * This {@link RootAction} provides relevant system information in an easily parseable format.
  * <dd>
  * </dd>
+ *
  * @author Mirko Friedenhagen
  */
 @Extension
@@ -72,17 +79,56 @@ public class SystemRootAction implements RootAction {
 
     public void doAlive(StaplerRequest request, StaplerResponse response) throws IOException {
         response.setContentType("text/plain");
-        response.getOutputStream().println("SUMMARY: OK -- " + String.valueOf(new DateTime()));
+        response.getOutputStream().println(String.format(Locale.ENGLISH, "SUMMARY: OK -- TIME: %s", String.valueOf(new DateTime())));
     }
 
     public void doCheck(StaplerRequest request, StaplerResponse response) throws IOException {
         response.setContentType("text/plain");
-        final List<Node> nodes = instance.getNodes();
+        final JQSMonitoring jqsMonitoring = new JQSMonitoring();
+        Collection<String> nodes = Collections2.transform(instance.getNodes(), new Function<Node, String>() {
+            public String apply(Node node) {
+                return node.getDisplayName();
+            }
+        });
         int buildableItems = instance.getQueue().countBuildableItems();
         final ServletOutputStream out = response.getOutputStream();
-        out.println("SUMMARY: OK -- " + String.valueOf(new DateTime()));
+        final ArrayList<RunningJob> jobsRunningTooLong = jqsMonitoring.getJobsRunningTooLong();
+        final FailHistory failHistory = jqsMonitoring.getFailHistory();
+        final int average24Hours = failHistory.getAverage24Hours();
+        final int lastHourFailed = failHistory.getLastHourFailed();
+        final int maximum24Hours = failHistory.getMaximum24Hours();
+        final String failedStatus;
+        int oks = 2;
+        int warnings = 0;
+        int failures = 0;
+        if (lastHourFailed > maximum24Hours) {
+            failures += 1;
+            failedStatus = String.format(Locale.ENGLISH, "FAILURE -- Count of job failures above maximum of the last 24h, lasth:%s, avg24h:%s, max24h:%s", lastHourFailed, average24Hours, maximum24Hours);
+        } else if (lastHourFailed > average24Hours) {
+            warnings += 1;
+            failedStatus = String.format(Locale.ENGLISH, "WARNING -- Count of job failures above average of last 24h, lasth:%s, avg24h:%s, max24h:%s", lastHourFailed, average24Hours, maximum24Hours);
+
+        } else {
+            oks += 1;
+            failedStatus = String.format(Locale.ENGLISH, "OK -- Count of job failures normal, lasth:%s, avg24h:%s, max24h:%s", lastHourFailed, average24Hours, maximum24Hours);
+        }
+        if (!jobsRunningTooLong.isEmpty()) {
+            failures += 1;
+        } else {
+            oks +=1;
+        }
+        final String status = failures > 0 ? "WARNING" : "OK";
+        out.println(String.format(Locale.ENGLISH, "SUMMARY: %s -- OK: %s, WARNING: %s, FAILURE: %s, TIME: %s",
+                status, oks, warnings, failures, String.valueOf(new DateTime())));
         out.println("NODES: OK -- " + String.valueOf(nodes));
         out.println("BUILD-QUEUE: OK -- " + String.valueOf(buildableItems) + " items in queue");
+        if (!jobsRunningTooLong.isEmpty()) {
+            out.println("JOBS_RUNNING_TO_LONG: FAILURE -- " + String.valueOf(jobsRunningTooLong));
+        } else {
+            out.println("JOBS_RUNNING_TO_LONG: OK -- None found!");
+        }
+        out.println(String.format(Locale.ENGLISH, "FAILING_JOBS: %s", failedStatus));
+        
     }
 
     public void doHealth(StaplerRequest request, StaplerResponse response) throws IOException {
