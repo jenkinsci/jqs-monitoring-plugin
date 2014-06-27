@@ -164,7 +164,7 @@ public class RunningJob {
         LocalConfig lc = new LocalConfig();
         final ArrayList<RunningJob> runningJobs = new ArrayList<RunningJob>();
         if (slaves == null || slaves.size() == 0) {
-            return null;
+            return runningJobs;
         }
         for (final Iterator<Slave> i = slaves.iterator(); i.hasNext();) {
             final Slave s = i.next();
@@ -181,9 +181,6 @@ public class RunningJob {
                     runningJobs.add(new RunningJob(lc, exec, s));
                 }
             }
-        }
-        if (runningJobs.size() == 0) {
-            return null;
         }
         return runningJobs;
     }
