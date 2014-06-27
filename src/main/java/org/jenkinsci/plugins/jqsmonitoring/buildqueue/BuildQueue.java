@@ -8,7 +8,6 @@ import hudson.model.Queue.BuildableItem;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import jenkins.model.Jenkins;
 
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
@@ -80,7 +79,7 @@ public class BuildQueue {
      * Creates and fills the list of queue jobs.
      */
     private void retrieveQueueJobs() {
-        final List<Queue.BuildableItem> list = Jenkins.getInstance().getQueue()
+        final List<Queue.BuildableItem> list = Hudson.getInstance().getQueue()
                 .getBuildableItems();
         this.jobs = new ArrayList<QueueJob>();
         final long currentTime = System.currentTimeMillis();

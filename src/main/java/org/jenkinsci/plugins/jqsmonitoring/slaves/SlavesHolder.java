@@ -10,7 +10,6 @@ import hudson.slaves.ComputerListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import jenkins.model.Jenkins;
 
 import org.jenkinsci.plugins.jqsmonitoring.jqscore.Constants;
 import org.kohsuke.stapler.export.Exported;
@@ -39,7 +38,7 @@ public final class SlavesHolder extends ComputerListener {
      */
     @SuppressWarnings("deprecation")
     private SlavesHolder() {
-        this.slaves = new ArrayList<Slave>(Jenkins.getInstance().getSlaves());
+        this.slaves = new ArrayList<Slave>(Hudson.getInstance().getSlaves());
         sort();
         // Adding ATExtension did no rigister my class, that is why this method
         // is called.
@@ -70,7 +69,7 @@ public final class SlavesHolder extends ComputerListener {
     @SuppressWarnings("deprecation")
     @Override
     public void onConfigurationChange() {
-        this.slaves = new ArrayList<Slave>(Jenkins.getInstance().getSlaves());
+        this.slaves = new ArrayList<Slave>(Hudson.getInstance().getSlaves());
         sort();
     }
     

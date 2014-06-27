@@ -9,7 +9,6 @@ import hudson.Extension;
 import hudson.model.RootAction;
 import hudson.model.Api;
 import hudson.model.Hudson;
-import jenkins.model.Jenkins;
 
 import org.jenkinsci.plugins.jqsmonitoring.beingbuilt.RunningJob;
 import org.jenkinsci.plugins.jqsmonitoring.buildqueue.BuildQueue;
@@ -127,7 +126,7 @@ public class JQSMonitoring implements RootAction {
      */
     @Exported
     public int getNumberOfAllJobs() {
-        return Jenkins.getInstance().getItems().size();
+        return Hudson.getInstance().getItems().size();
     }
 
     /**
@@ -236,7 +235,7 @@ public class JQSMonitoring implements RootAction {
      * @return
      */
     private boolean hasPermission() {
-        return Jenkins.getInstance().hasPermission(Hudson.ADMINISTER);
+        return Hudson.getInstance().hasPermission(Hudson.ADMINISTER);
     }
 
     /**
