@@ -8,7 +8,7 @@ This menu-panel also contains a link to the configuration page, where a number o
 ![And bit of configuration](docu/config.png)
 
 
-#Usage#
+# Usage
 
 The plugin can be used to show information on small or big monitors, the different components can be added to other pages using the links.
 
