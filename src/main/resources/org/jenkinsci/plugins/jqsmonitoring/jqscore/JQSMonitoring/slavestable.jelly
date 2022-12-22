@@ -1,15 +1,11 @@
+<?jelly escape-by-default='true'?>
 <j:jelly
-	xmlns:j="jelly:core"
-	xmlns:st="jelly:stapler"
-	xmlns:d="jelly:define"
-	xmlns:l="/lib/layout"
-	xmlns:t="/lib/hudson"
-	xmlns:f="/lib/form">
+	xmlns:j="jelly:core">
 	<j:set
 		var="slavecount"
 		value="${it.getSlavesHolder().getNumberOfSlaves()}" />
 	<h1 style="font-size: 190%;">
-		<b> ${%Slaves: } ${it.getSlavesHolder().getNumberOfSlaves()}
+		<b> ${%Agents: } ${it.getSlavesHolder().getNumberOfSlaves()}
 			(${it.getSlavesHolder().getNumberOfOnlineSlaves()} ${% online} / ${it.getSlavesHolder().getNumberOfOfflineSlaves()} ${% offline}) </b>
 	</h1>
 	<table

@@ -44,8 +44,6 @@ import org.jenkinsci.plugins.jqsmonitoring.failedbuilds.FailHistory;
 
 /**
  * This {@link RootAction} provides relevant system information in an easily parseable format.
- * <dd>
- * </dd>
  *
  * @author Mirko Friedenhagen
  */
@@ -55,7 +53,7 @@ public class SystemRootAction implements RootAction {
     final Jenkins instance;
 
     public SystemRootAction() {
-        this(Jenkins.getInstance());
+        this(Jenkins.get());
     }
 
     SystemRootAction(Jenkins instance) {
@@ -85,11 +83,7 @@ public class SystemRootAction implements RootAction {
     public void doCheck(StaplerRequest request, StaplerResponse response) throws IOException {
         response.setContentType("text/plain");
         final JQSMonitoring jqsMonitoring = new JQSMonitoring();
-        Collection<String> nodes = Collections2.transform(instance.getNodes(), new Function<Node, String>() {
-            public String apply(Node node) {
-                return node.getDisplayName();
-            }
-        });
+        Collection<String> nodes = Collections2.transform(instance.getNodes(), Node::getDisplayName);
         int buildableItems = instance.getQueue().countBuildableItems();
         final ServletOutputStream out = response.getOutputStream();
         final ArrayList<RunningJob> jobsRunningTooLong = jqsMonitoring.getJobsRunningTooLong();

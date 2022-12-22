@@ -128,7 +128,7 @@ public class RunningJob {
 
     /**
      * Returns the time this job as been running. Returns it as a string that is human readable.
-     * @return elapsed time in h m s format. where h can be > 24.
+     * @return elapsed time in h m s format. where h can be greater than 24.
      */
     @Exported
     public String getRunningTime() {
@@ -166,18 +166,16 @@ public class RunningJob {
         if (slaves == null || slaves.size() == 0) {
             return runningJobs;
         }
-        for (final Iterator<Slave> i = slaves.iterator(); i.hasNext();) {
-            final Slave s = i.next();
+        for (final Slave s : slaves) {
             final List<Executor> executors = s.toComputer().getExecutors();
             if (executors == null || executors.size() == 0) {
                 continue;
             }
-            for (final Iterator<Executor> p = executors.iterator(); p.hasNext();) {
-                final Executor exec = p.next();
+            for (final Executor exec : executors) {
                 if (exec != null
                         && exec.getCurrentExecutable() != null
                         && TimeUnit.MINUTES.toMillis(lc.getTimeFilter_1()) <= exec
-                                .getElapsedTime()) {
+                        .getElapsedTime()) {
                     runningJobs.add(new RunningJob(lc, exec, s));
                 }
             }

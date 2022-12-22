@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <div>
   This plugin shows different information about the queue, slaves and jobs in jenkins.
 </div>

@@ -126,8 +126,6 @@ public class QueueJob implements Comparable<QueueJob> {
 
     /**
      * Returns why the job is waiting in the queue.
-     * 
-     * @return
      */
     @Exported
     public String getCauseOfBlockage() {
