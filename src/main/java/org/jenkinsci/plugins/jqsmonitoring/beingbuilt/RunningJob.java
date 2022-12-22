@@ -128,7 +128,7 @@ public class RunningJob {
 
     /**
      * Returns the time this job as been running. Returns it as a string that is human readable.
-     * @return elapsed time in h m s format. where h can be > 24.
+     * @return elapsed time in h m s format. where h can be greater than 24.
      */
     @Exported
     public String getRunningTime() {
