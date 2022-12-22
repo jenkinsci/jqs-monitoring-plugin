@@ -8,5 +8,6 @@
 *.ear
 target
 work
+.idea
 
 release.properties

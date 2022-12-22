@@ -10,6 +10,7 @@ import hudson.model.RootAction;
 import hudson.model.Api;
 import hudson.model.Hudson;
 
+import jenkins.model.Jenkins;
 import org.jenkinsci.plugins.jqsmonitoring.beingbuilt.RunningJob;
 import org.jenkinsci.plugins.jqsmonitoring.buildqueue.BuildQueue;
 import org.jenkinsci.plugins.jqsmonitoring.failedbuilds.FailHistory;
@@ -126,7 +127,7 @@ public class JQSMonitoring implements RootAction {
      */
     @Exported
     public int getNumberOfAllJobs() {
-        return Hudson.getInstance().getItems().size();
+        return Jenkins.get().getItems().size();
     }
 
     /**
@@ -176,7 +177,6 @@ public class JQSMonitoring implements RootAction {
      *            Response
      * @throws IOException
      *             input/ouput
-     * @throws ServletException
      */
     public void doConfigSubmit(StaplerRequest req, StaplerResponse rsp)
             throws IOException, ServletException {
@@ -196,8 +196,6 @@ public class JQSMonitoring implements RootAction {
      *            Request
      * @param rsp
      *            Response
-     * @throws IOException
-     * @throws ServletException
      */
     public void doSetDefaults(StaplerRequest req, StaplerResponse rsp)
             throws IOException, ServletException {
@@ -231,11 +229,10 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * Checks if the user has ADMINISTER permission.
-     * 
-     * @return
+     *
      */
     private boolean hasPermission() {
-        return Hudson.getInstance().hasPermission(Hudson.ADMINISTER);
+        return Jenkins.get().hasPermission(Hudson.ADMINISTER);
     }
 
     /**

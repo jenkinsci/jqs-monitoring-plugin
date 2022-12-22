@@ -105,7 +105,7 @@ public class LocalConfig implements Saveable {
         }
     }
 
-    public void deleteConfigFile() {
+    public void deleteConfigFile() throws IOException {
         this.getConfigXml().delete();
     }
 

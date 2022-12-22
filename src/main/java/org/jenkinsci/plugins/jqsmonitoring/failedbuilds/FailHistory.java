@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.jqsmonitoring.failedbuilds;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.model.AbstractProject;
 import hudson.model.Api;
 import hudson.model.Result;
@@ -78,6 +79,7 @@ public class FailHistory {
     }
 
     @Exported
+    @SuppressFBWarnings("DM_DEFAULT_ENCODING")
     public int getLastHourFailed() {
         return this.get24Hours("today")[this.getCurrentHour()];
     }
@@ -116,7 +118,7 @@ public class FailHistory {
         this.failedEnabledJobs = 0;
         this.failedDisabledJobs = 0;
         int cannotRetrieveCompletedBuild = 0;
-        for (AbstractProject<?, ?> p : Jenkins.getInstance().getAllItems(
+        for (AbstractProject<?, ?> p : Jenkins.get().getAllItems(
                 AbstractProject.class)) {
             try {
                 if (p.getLastCompletedBuild().getResult()
@@ -220,6 +222,7 @@ public class FailHistory {
      * 
      * @return the date of the start
      */
+    @SuppressFBWarnings(value = "DM_DEFAULT_ENCODING", justification = "Todo triage")
     private Date calcStartingPoint() {
         final Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY,
@@ -257,6 +260,7 @@ public class FailHistory {
     /**
      * What should be written every hour.
      */
+    @SuppressFBWarnings(value = "DM_DEFAULT_ENCODING", justification = "Todo triage")
     private void writeData() {
         write24Hours();
     }
@@ -265,6 +269,7 @@ public class FailHistory {
      * Rewrites the 24-hour change file, by adding information for the current
      * hour. Called every hour.
      */
+    @SuppressFBWarnings(value = "DM_DEFAULT_ENCODING", justification = "Todo triage")
     private void write24Hours() {
         // retrieve the number of failed jobs for today
 
@@ -441,7 +446,6 @@ public class FailHistory {
      * 
      * @param sorting
      *            what type of sorting has been chosen in the conf.
-     * @return
      */
     private int getHistogramStartingHour(int sorting) {
         if (sorting == 2) {
@@ -477,6 +481,7 @@ public class FailHistory {
      * @return array with 24 elements containing the number of failed jobs for
      *         every hour
      */
+    @SuppressFBWarnings(value = "DM_DEFAULT_ENCODING", justification = "Todo triage")
     private int[] get24Hours(String s) {
 
         final int[] hours = new int[Constants.HOURS_PER_DAY + 1];
@@ -500,8 +505,6 @@ public class FailHistory {
                             hours[Constants.HOURS_PER_DAY], hours[index]);
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

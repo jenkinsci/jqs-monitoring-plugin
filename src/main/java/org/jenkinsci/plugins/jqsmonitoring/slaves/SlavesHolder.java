@@ -182,12 +182,8 @@ public final class SlavesHolder extends ComputerListener {
      * Sort method for the slaves list.
      */
     private void sort() {
-        final Comparator<Slave> c = new Comparator<Slave>() {
-            public int compare(Slave s1, Slave s2) {
-                return s1.getNodeName().compareTo(s2.getNodeName());
-            }
-        };
-        Collections.sort(this.slaves, c);
+        final Comparator<Slave> c = Comparator.comparing(Slave::getNodeName);
+        this.slaves.sort(c);
     }
     
     /**

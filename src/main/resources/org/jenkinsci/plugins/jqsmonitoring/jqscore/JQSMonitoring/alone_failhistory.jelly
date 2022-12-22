@@ -1,10 +1,8 @@
+<?jelly escape-by-default='true'?>
 <j:jelly
 	xmlns:j="jelly:core"
 	xmlns:st="jelly:stapler"
-	xmlns:d="jelly:define"
-	xmlns:l="/lib/layout"
-	xmlns:t="/lib/hudson"
-	xmlns:f="/lib/form">
+	xmlns:l="/lib/layout">
 	<l:layout>
 		<l:header title="JQS Monitoring" />
 		<st:include page="sidepanel.jelly" />

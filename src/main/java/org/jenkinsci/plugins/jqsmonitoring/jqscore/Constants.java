@@ -86,7 +86,7 @@ public final class Constants {
     public static final String SLAVE_OK_COLOR = "#66CC00";
 
     private static String getHome() {
-        String s = Jenkins.getInstance().getRootDir().getPath();
+        String s = Jenkins.get().getRootDir().getPath();
         if (s == null) {
             s = System.getProperty("JENKINS_HOME");
         }
@@ -104,7 +104,7 @@ public final class Constants {
     }
 
     private static String getRootUrl() {
-        String s = Jenkins.getInstance().getRootUrl();
+        String s = Jenkins.get().getRootUrl();
         if (s == null) {
             s = JenkinsLocationConfiguration.get().getUrl();
         }
