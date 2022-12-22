@@ -1,4 +1,4 @@
-This plugin show information about jobs, slaves and the queue in Jenkins.
+This plugin show information about jobs, agents and the queue in Jenkins.
 
 ![Just the main plugin view](docu/main.png)
 
