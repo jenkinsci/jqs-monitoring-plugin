@@ -34,7 +34,7 @@ import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
 /**
- * @TODO remove magic numbers! This class implements the information about
+ * TODO remove magic numbers! This class implements the information about
  *       failed builds. Keeps track of the number of failed builds for the last
  *       48 hours and shows the last 24 in a histogram.
  * 
