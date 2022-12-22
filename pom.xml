@@ -14,7 +14,7 @@
     <packaging>hpi</packaging>
 
     <name> Job/Queue/Agents Monitoring Plugin</name>
-    <url>https://wiki.jenkins-ci.org/display/JENKINS/JQS+Monitoring+Plugin</url>
+    <url>https://plugins.jenkins.io/jqs-monitoring/</url>
     <scm>
         <connection>
             scm:git:https://github.com/jenkinsci/jqs-monitoring-plugin.git
