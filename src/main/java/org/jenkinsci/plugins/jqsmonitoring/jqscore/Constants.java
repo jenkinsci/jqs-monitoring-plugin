@@ -1,11 +1,7 @@
 package org.jenkinsci.plugins.jqsmonitoring.jqscore;
 
-import hudson.model.Hudson;
-
 import java.awt.Color;
 import java.io.File;
-import java.util.logging.Logger;
-
 import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 
@@ -14,9 +10,6 @@ public final class Constants {
     private Constants() {
         // holds constants
     }
-
-    private static final Logger LOGGER = Logger.getLogger(Constants.class
-            .getName());
 
     public static final String rootURL = getRootUrl();
     public static final String URL = "jqs-monitoring";
@@ -54,10 +47,8 @@ public final class Constants {
 
     public static final long REFRESH_RATE = 1000 * 60 * 60; // an hour
 
-    public static final String BASE = Constants.getHome()
-            + "userContent/jqs-monitoring-data/";
-    public static final String FAILED_JOB_GRAPHIC_1_URL = rootURL
-            + "userContent/jqs-monitoring-data/graphic1.jpg";
+    public static final String BASE = Constants.getHome() + "userContent/jqs-monitoring-data/";
+    public static final String FAILED_JOB_GRAPHIC_1_URL = rootURL + "userContent/jqs-monitoring-data/graphic1.jpg";
     public static final String FAILED_JOB_GRAPHIC_1 = BASE + "graphic1.jpg";
     public static final String file_longterm = BASE + "longterm";
     public static final String file_24hours = BASE + "24hours";
@@ -65,12 +56,10 @@ public final class Constants {
 
     public static final int HOURS_PER_DAY = 24;
 
-    public static final String LESS_FAILED_ICON = ICONS
-            + "arrow_down_32x32.png";
-    public static final String MORE_FAILED_ICON = ICONS
-            + "red_arrow_up_32x32.png";
+    public static final String LESS_FAILED_ICON = ICONS + "arrow_down_32x32.png";
+    public static final String MORE_FAILED_ICON = ICONS + "red_arrow_up_32x32.png";
     public static final String EQUAL_FAILED_ICON = null; // ICONS +
-                                                         // "red_equal_24x32.png";
+    // "red_equal_24x32.png";
     public static final String LESS_FAILED_COLOR = "green";
     public static final String MORE_FAILED_COLOR = "red";
 
@@ -79,10 +68,10 @@ public final class Constants {
 
     public static final String file_LOCALCONFIG = BASE + "jqs_localconf.xml";
 
-    public static final String SLAVE_OFFLINE_COLOR = "#"
-            + (Integer.toHexString(Color.RED.getRGB()).substring(2, 7));
-    public static final String SLAVE_NOEXECUTORS_COLOR = "#"
-            + (Integer.toHexString(Color.ORANGE.getRGB()).substring(2, 7));
+    public static final String SLAVE_OFFLINE_COLOR =
+            "#" + (Integer.toHexString(Color.RED.getRGB()).substring(2, 7));
+    public static final String SLAVE_NOEXECUTORS_COLOR =
+            "#" + (Integer.toHexString(Color.ORANGE.getRGB()).substring(2, 7));
     public static final String SLAVE_OK_COLOR = "#66CC00";
 
     private static String getHome() {
@@ -96,10 +85,8 @@ public final class Constants {
         if (s == null) {
             s = (new File(System.getProperty("user.dir"))).getParent();
         }
-        if (s != null && !s.endsWith("/"))
-            s = s + "/";
-        if (s != null && !s.startsWith("/"))
-            s = "/" + s;
+        if (s != null && !s.endsWith("/")) s = s + "/";
+        if (s != null && !s.startsWith("/")) s = "/" + s;
         return s;
     }
 
@@ -112,11 +99,10 @@ public final class Constants {
         // hardcoded and obviously working only when jenkins runs on 8080
         // info
         // https://wiki.jenkins-ci.org/display/JENKINS/Hyperlinks+in+HTML
-        if(s == null) {
+        if (s == null) {
             s = "http://localhost:8080/jenkins";
         }
-        if (s != null && !s.endsWith("/"))
-            s = s + "/";
+        if (s != null && !s.endsWith("/")) s = s + "/";
         return s;
     }
 }

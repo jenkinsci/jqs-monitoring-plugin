@@ -1,25 +1,21 @@
 package org.jenkinsci.plugins.jqsmonitoring.slaves;
 
-import hudson.Extension;
 import hudson.model.Api;
 import hudson.model.Executor;
 import hudson.model.Hudson;
 import hudson.model.Slave;
 import hudson.slaves.ComputerListener;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-
 import org.jenkinsci.plugins.jqsmonitoring.jqscore.Constants;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
 /**
  * Holds all information about the slaves in the current jenkins instance.
- * 
+ *
  * @author yboev
- * 
+ *
  */
 @ExportedBean
 public final class SlavesHolder extends ComputerListener {
@@ -47,7 +43,7 @@ public final class SlavesHolder extends ComputerListener {
 
     /**
      * Return the instance for this class(Singleton).
-     * 
+     *
      * @return the instance.
      */
     public static SlavesHolder getInstance() {
@@ -56,10 +52,10 @@ public final class SlavesHolder extends ComputerListener {
         }
         return instance;
     }
-    
+
     /**
      * REST API.
-     * 
+     *
      * @return the api.
      */
     public Api getApi() {
@@ -72,11 +68,10 @@ public final class SlavesHolder extends ComputerListener {
         this.slaves = new ArrayList<Slave>(Hudson.getInstance().getSlaves());
         sort();
     }
-    
 
     /**
      * List with all slaves.
-     * 
+     *
      * @return the list.
      */
     @Exported
@@ -86,7 +81,7 @@ public final class SlavesHolder extends ComputerListener {
 
     /**
      * The number of slaves.
-     * 
+     *
      * @return the number as int.
      */
     @Exported
@@ -99,82 +94,141 @@ public final class SlavesHolder extends ComputerListener {
 
     /**
      * Returns the url for a certain slave.
-     * 
+     *
      * @param slave
      *            the slave.
      * @return the url of the given slave.
      */
     public String getUrl(Slave slave) {
-        try {
-            return slave.getComputer().getTimeline().getLastBuild().getUrl();
-        } catch (NullPointerException e) {
+        if (slave == null) {
             return "NoLastBuild";
         }
+
+        var computer = slave.getComputer();
+
+        if (computer == null) {
+            return "NoLastBuild";
+        }
+
+        var builds = computer.getBuilds();
+
+        if (builds == null) {
+            return "NoLastBuild";
+        }
+
+        var lastBuild = builds.getLastBuild();
+
+        if (lastBuild == null) {
+            return "NoLastBuild";
+        }
+
+        return lastBuild.getUrl();
     }
 
     /**
      * Return the last build for a given slave.
-     * 
+     *
      * @param slave
      *            the slave.
      * @return the last build of the given slave as String.
      */
     public String getLastBuild(Slave slave) {
-        try {
-            return slave.getComputer().getTimeline().getLastBuild()
-                    .getFullDisplayName();
-        } catch (NullPointerException e) {
+        if (slave == null) {
             return null;
         }
+
+        var computer = slave.getComputer();
+
+        if (computer == null) {
+            return null;
+        }
+
+        var builds = computer.getBuilds();
+
+        if (builds == null) {
+            return null;
+        }
+
+        var lastBuild = builds.getLastBuild();
+
+        if (lastBuild == null) {
+            return null;
+        }
+
+        return lastBuild.getFullDisplayName();
     }
 
     /**
      * Return number of online slaves.
-     * 
+     *
      * @return number of online slaves as int.
      */
     @Exported
     public int getNumberOfOnlineSlaves() {
         int count = 0;
+
         for (Slave s : slaves) {
-            if (s.getComputer().isOnline()) {
+            if (s == null) {
+                continue;
+            }
+
+            var computer = s.getComputer();
+
+            if (computer != null && computer.isOnline()) {
                 count++;
             }
         }
+
         return count;
     }
-    
+
     /**
      * Return number of offline slaves.
-     * 
+     *
      * @return number of offline slaves as int.
      */
     @Exported
     public int getNumberOfOfflineSlaves() {
         int count = 0;
+
         for (Slave s : slaves) {
-            if (s.getComputer().isOffline()) {
+            if (s == null) {
+                continue;
+            }
+
+            var computer = s.getComputer();
+
+            if (computer == null || computer.isOffline()) {
                 count++;
             }
         }
+
         return count;
     }
 
     /**
      * Return the color assotiated with this slave . red - offline orange - all
      * executors busy green - free executor
-     * 
+     *
      * @param s
      *            the slave.
      * @return the color as String.
      */
     public String getColor(Slave s) {
-        if (s.toComputer().isOffline()) {
+        if (s == null) {
             return Constants.SLAVE_OFFLINE_COLOR;
         }
+
+        var computer = s.toComputer();
+
+        if (computer == null || computer.isOffline()) {
+            return Constants.SLAVE_OFFLINE_COLOR;
+        }
+
         if (this.areAllExecutorsBusy(s)) {
             return Constants.SLAVE_NOEXECUTORS_COLOR;
         }
+
         return Constants.SLAVE_OK_COLOR;
     }
 
@@ -185,22 +239,33 @@ public final class SlavesHolder extends ComputerListener {
         final Comparator<Slave> c = Comparator.comparing(Slave::getNodeName);
         this.slaves.sort(c);
     }
-    
+
     /**
      * Checks if all executors of a slave are busy.
-     * 
+     *
      * @param s
      *            the slave, which executors are being checked.
      * @return true - all busy, false otherwise.
      */
     private boolean areAllExecutorsBusy(Slave s) {
+        if (s == null) {
+            return false;
+        }
+
+        var computer = s.getComputer();
+
+        if (computer == null) {
+            return false;
+        }
+
         int count = 0;
-        for (Executor executor : s.getComputer().getExecutors()) {
+
+        for (Executor executor : computer.getExecutors()) {
             if (!executor.isBusy()) {
                 count++;
             }
         }
-        return (count == 0);
-    }
 
+        return count == 0;
+    }
 }

@@ -1,59 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <parent>
-        <groupId>org.jenkins-ci.plugins</groupId>
-        <artifactId>plugin</artifactId>
-        <version>4.53</version>
-        <relativePath />
-    </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jqs-monitoring</artifactId>
-    <version>${changelist}</version>
-    <packaging>hpi</packaging>
+  <parent>
+    <groupId>org.jenkins-ci.plugins</groupId>
+    <artifactId>plugin</artifactId>
+    <version>6.2236.v12dd4c483242</version>
+    <relativePath />
+  </parent>
 
-    <name> Job/Queue/Agents Monitoring Plugin</name>
-    <url>https://plugins.jenkins.io/jqs-monitoring/</url>
-    <scm>
-        <connection>
-            scm:git:https://github.com/jenkinsci/jqs-monitoring-plugin.git
-        </connection>
-        <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-        <url> https://github.com/jenkinsci/jqs-monitoring-plugin</url>
-    </scm>
+  <artifactId>jqs-monitoring</artifactId>
+  <version>${changelist}</version>
+  <packaging>hpi</packaging>
 
-    <repositories>
-        <repository>
-            <id>repo.jenkins-ci.org</id>
-            <url>https://repo.jenkins-ci.org/public/</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>repo.jenkins-ci.org</id>
-            <url>https://repo.jenkins-ci.org/public/</url>
-        </pluginRepository>
-    </pluginRepositories>
+  <name>Job/Queue/Agents Monitoring Plugin</name>
+  <url>https://plugins.jenkins.io/jqs-monitoring/</url>
 
+  <scm>
+    <connection>scm:git:https://github.com/jenkinsci/jqs-monitoring-plugin.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/jqs-monitoring-plugin.git</developerConnection>
+    <url>https://github.com/jenkinsci/jqs-monitoring-plugin</url>
+  </scm>
+
+  <properties>
+    <changelist>999999-SNAPSHOT</changelist>
+
+    <!-- Jenkins baseline -->
+    <jenkins.baseline>2.568</jenkins.baseline>
+    <jenkins.version>${jenkins.baseline}.3</jenkins.version>
+
+    <!-- Quality checks -->
+    <spotless.check.skip>false</spotless.check.skip>
+    <ban-junit4-imports.skip>false</ban-junit4-imports.skip>
+    <ban-deprecated-stapler.skip>false</ban-deprecated-stapler.skip>
+    <ban-commons-lang-2.skip>false</ban-commons-lang-2.skip>
+    <hpi.strictBundledArtifacts>true</hpi.strictBundledArtifacts>
+    <banObsoleteDependencyOverrides.skip>false</banObsoleteDependencyOverrides.skip>
+  </properties>
+
+  <dependencyManagement>
     <dependencies>
-        <!-- Remove joda-time and use native java.time classes -->
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.12.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
+      <dependency>
+        <groupId>io.jenkins.tools.bom</groupId>
+        <artifactId>bom-${jenkins.baseline}.x</artifactId>
+        <version>7002.v028a_3607ddc8</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
+  </dependencyManagement>
 
-    <properties>
-        <changelist>999999-SNAPSHOT</changelist>
-        <jenkins.version>2.361.4</jenkins.version>
-        <!-- TODO fix violations -->
-        <spotbugs.threshold>High</spotbugs.threshold>
-    </properties>
+  <repositories>
+    <repository>
+      <id>repo.jenkins-ci.org</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>repo.jenkins-ci.org</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
 
 </project>

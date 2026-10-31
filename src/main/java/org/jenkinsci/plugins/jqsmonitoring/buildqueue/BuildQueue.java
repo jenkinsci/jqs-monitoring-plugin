@@ -1,14 +1,11 @@
 package org.jenkinsci.plugins.jqsmonitoring.buildqueue;
 
 import hudson.model.Api;
-import hudson.model.Hudson;
 import hudson.model.Queue;
 import hudson.model.Queue.BuildableItem;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
@@ -16,9 +13,9 @@ import org.kohsuke.stapler.export.ExportedBean;
 /**
  * This class implements a BuildQueue and contains information about all queue
  * jobs.
- * 
+ *
  * @author yboev
- * 
+ *
  */
 @ExportedBean
 public class BuildQueue {
@@ -39,7 +36,7 @@ public class BuildQueue {
 
     /**
      * REST API.
-     * 
+     *
      * @return the api.
      */
     public Api getApi() {
@@ -48,7 +45,7 @@ public class BuildQueue {
 
     /**
      * Return the number of queue jobs.
-     * 
+     *
      * @return the number of jobs waiting as int.
      */
     @Exported
@@ -61,10 +58,10 @@ public class BuildQueue {
 
     /**
      * Returns a list of all jobs in the queue.
-     * 
+     *
      * @return the list
      */
-    @Exported(inline=true)
+    @Exported(inline = true)
     public ArrayList<QueueJob> getQueueJobs() {
         return this.jobs;
     }
@@ -80,8 +77,7 @@ public class BuildQueue {
      * Creates and fills the list of queue jobs.
      */
     private void retrieveQueueJobs() {
-        final List<Queue.BuildableItem> list = Jenkins.get().getQueue()
-                .getBuildableItems();
+        final List<Queue.BuildableItem> list = Jenkins.get().getQueue().getBuildableItems();
         this.jobs = new ArrayList<QueueJob>();
         final long currentTime = System.currentTimeMillis();
         for (BuildableItem buildableItem : list) {

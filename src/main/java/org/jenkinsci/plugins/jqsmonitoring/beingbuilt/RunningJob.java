@@ -1,20 +1,15 @@
 package org.jenkinsci.plugins.jqsmonitoring.beingbuilt;
 
-
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import org.jenkinsci.plugins.jqsmonitoring.jqscore.LocalConfig;
-import org.kohsuke.stapler.export.Exported;
-import org.kohsuke.stapler.export.ExportedBean;
-
-
 import hudson.model.Api;
 import hudson.model.Executor;
 import hudson.model.Slave;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import org.jenkinsci.plugins.jqsmonitoring.jqscore.LocalConfig;
+import org.kohsuke.stapler.export.Exported;
+import org.kohsuke.stapler.export.ExportedBean;
 
 /**
  * Class representing a job that has been running.
@@ -23,7 +18,7 @@ import hudson.model.Slave;
  */
 @ExportedBean
 public class RunningJob {
-    
+
     /**
      * name of the job.
      */
@@ -52,7 +47,7 @@ public class RunningJob {
 
     /**
      * Constructor
-     * 
+     *
      * @param lc
      *            local configuration.
      * @param executor
@@ -61,44 +56,54 @@ public class RunningJob {
      *            the slave.
      */
     public RunningJob(LocalConfig lc, Executor executor, Slave slave) {
-        this.name = executor.getCurrentExecutable() + "";
         this.slave = slave;
         this.runningTime = executor.getElapsedTime();
         this.remainingTime = executor.getEstimatedRemainingTime();
-        this.jobUrl = executor.getCurrentExecutable().getParent().getOwnerTask()
-                .getUrl();
-        if (TimeUnit.MINUTES.toMillis(lc.getTimeFilter_2()) >= this.runningTime) {
-            this.color = Color.ORANGE;
+
+        var executable = executor.getCurrentExecutable();
+
+        if (executable != null) {
+            this.name = executable.toString();
+
+            var parent = executable.getParent();
+            if (parent != null && parent.getOwnerTask() != null) {
+                this.jobUrl = parent.getOwnerTask().getUrl();
+            }
         }
-        if (TimeUnit.MINUTES.toMillis(lc.getTimeFilter_2()) < this.runningTime) {
-            this.color = Color.RED;
-        }
+
+        this.color = TimeUnit.MINUTES.toMillis(lc.getTimeFilter_2()) >= this.runningTime ? Color.ORANGE : Color.RED;
     }
-    
+
     public Api getApi() {
         return new Api(this);
     }
-    
+
     /**
      * Returns the slave url on which this job runs.
-     * 
+     *
      * @return The url as String.
      */
     @Exported
     public String getSlaveUrl() {
-        return this.slave.getComputer().getUrl();
+        if (this.slave == null) {
+            return null;
+        }
+
+        var computer = this.slave.getComputer();
+
+        return computer != null ? computer.getUrl() : null;
     }
 
     /**
      * Returns the job url.
-     * 
+     *
      * @return the url as String.
      */
     @Exported
     public String getJobUrl() {
         return this.jobUrl;
     }
-    
+
     /**
      * Returns the color.
      * @return the color as string. Format: #******.
@@ -151,7 +156,7 @@ public class RunningJob {
     public String getRemainingTime() {
         return this.remainingTime;
     }
-    
+
     /**
      * Returns a list of jobs being build for too long.
      * @param slaves
@@ -162,25 +167,38 @@ public class RunningJob {
      */
     public static ArrayList<RunningJob> getJobsRunningTooLong(ArrayList<Slave> slaves) {
         LocalConfig lc = new LocalConfig();
-        final ArrayList<RunningJob> runningJobs = new ArrayList<RunningJob>();
-        if (slaves == null || slaves.size() == 0) {
+        final ArrayList<RunningJob> runningJobs = new ArrayList<>();
+
+        if (slaves == null || slaves.isEmpty()) {
             return runningJobs;
         }
+
         for (final Slave s : slaves) {
-            final List<Executor> executors = s.toComputer().getExecutors();
-            if (executors == null || executors.size() == 0) {
+            if (s == null) {
                 continue;
             }
+
+            var computer = s.toComputer();
+
+            if (computer == null) {
+                continue;
+            }
+
+            final List<Executor> executors = computer.getExecutors();
+
+            if (executors == null || executors.isEmpty()) {
+                continue;
+            }
+
             for (final Executor exec : executors) {
                 if (exec != null
                         && exec.getCurrentExecutable() != null
-                        && TimeUnit.MINUTES.toMillis(lc.getTimeFilter_1()) <= exec
-                        .getElapsedTime()) {
+                        && TimeUnit.MINUTES.toMillis(lc.getTimeFilter_1()) <= exec.getElapsedTime()) {
                     runningJobs.add(new RunningJob(lc, exec, s));
                 }
             }
         }
+
         return runningJobs;
     }
-    
 }
