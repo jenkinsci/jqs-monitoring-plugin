@@ -27,9 +27,7 @@ public class WaitHistory extends QueueListener {
     private final List<WaitHistoryEntry> entries = new ArrayList<>();
 
     public WaitHistory() {
-        File file = new File(
-                Jenkins.get().getRootDir(),
-                "jqs-monitoring-wait-history.xml");
+        File file = new File(Jenkins.get().getRootDir(), "jqs-monitoring-wait-history.xml");
 
         this.storage = new XmlFile(new XStream2(), file);
         load();
@@ -58,25 +56,16 @@ public class WaitHistory extends QueueListener {
 
         CauseOfBlockage blockage = item.getCauseOfBlockage();
 
-        String cause = blockage != null
-                ? blockage.getShortDescription()
-                : item.getWhy();
+        String cause = blockage != null ? blockage.getShortDescription() : item.getWhy();
 
         if (cause == null || cause.isBlank()) {
             cause = "No blockage";
         }
 
-        String name = run.getParent().getFullDisplayName()
-                + " #" + run.getNumber();
+        String name = run.getParent().getFullDisplayName() + " #" + run.getNumber();
 
-        WaitHistoryEntry entry = new WaitHistoryEntry(
-                item.getId(),
-                "BUILDING",
-                name,
-                cause,
-                run.getUrl(),
-                waitTime,
-                startedAt);
+        WaitHistoryEntry entry =
+                new WaitHistoryEntry(item.getId(), "BUILDING", name, cause, run.getUrl(), waitTime, startedAt);
 
         synchronized (this) {
             entries.add(entry);
@@ -90,26 +79,20 @@ public class WaitHistory extends QueueListener {
 
         for (WaitHistoryEntry entry : entries) {
             if (entry.getQueueId() == queueId) {
-                entry.setStatus(
-                        result != null ? result.toString() : "UNKNOWN");
+                entry.setStatus(result != null ? result.toString() : "UNKNOWN");
 
                 save();
                 return;
             }
         }
 
-        LOGGER.log(
-                Level.FINE,
-                "No wait history entry found for queue ID {0}",
-                queueId);
+        LOGGER.log(Level.FINE, "No wait history entry found for queue ID {0}", queueId);
     }
 
     public synchronized List<WaitHistoryEntry> getEntries() {
         List<WaitHistoryEntry> result = new ArrayList<>(entries);
 
-        result.sort(
-                Comparator.comparingLong(WaitHistoryEntry::getStartedAt)
-                        .reversed());
+        result.sort(Comparator.comparingLong(WaitHistoryEntry::getStartedAt).reversed());
 
         return result;
     }
