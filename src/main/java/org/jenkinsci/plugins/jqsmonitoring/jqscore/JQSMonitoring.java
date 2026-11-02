@@ -103,8 +103,7 @@ public class JQSMonitoring implements RootAction {
      */
     @Exported
     public String getRootURL() {
-        // LOGGER.info(Constants.rootURL);
-        return Constants.rootURL;
+        return Constants.getRootUrl();
     }
 
     /**
@@ -160,7 +159,7 @@ public class JQSMonitoring implements RootAction {
      */
     @Exported
     public String getFailedBuildHistogram() {
-        return Constants.FAILED_JOB_GRAPHIC_1_URL;
+        return Constants.getFailedJobGraphicUrl();
     }
 
     /**

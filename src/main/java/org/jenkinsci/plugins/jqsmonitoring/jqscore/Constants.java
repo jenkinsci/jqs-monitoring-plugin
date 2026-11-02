@@ -11,7 +11,24 @@ public final class Constants {
         // holds constants
     }
 
-    public static final String rootURL = getRootUrl();
+    public static String getRootUrl() {
+        String rootUrl = Jenkins.get().getRootUrl();
+
+        if (rootUrl == null || rootUrl.isBlank()) {
+            rootUrl = JenkinsLocationConfiguration.get().getUrl();
+        }
+
+        if (rootUrl == null || rootUrl.isBlank()) {
+            return "";
+        }
+
+        return rootUrl.endsWith("/") ? rootUrl : rootUrl + "/";
+    }
+
+    public static String getFailedJobGraphicUrl() {
+        return getRootUrl() + "userContent/jqs-monitoring-data/graphic1.jpg";
+    }
+
     public static final String URL = "jqs-monitoring";
     public static final String DISPLAYNAME = "JQS Monitoring";
     public static final String ICONS = "plugin/jqs-monitoring/icons/";
@@ -48,7 +65,6 @@ public final class Constants {
     public static final long REFRESH_RATE = 1000 * 60 * 60; // an hour
 
     public static final String BASE = Constants.getHome() + "userContent/jqs-monitoring-data/";
-    public static final String FAILED_JOB_GRAPHIC_1_URL = rootURL + "userContent/jqs-monitoring-data/graphic1.jpg";
     public static final String FAILED_JOB_GRAPHIC_1 = BASE + "graphic1.jpg";
     public static final String file_longterm = BASE + "longterm";
     public static final String file_24hours = BASE + "24hours";
@@ -83,26 +99,10 @@ public final class Constants {
             s = System.getProperty("HUDSON_HOME");
         }
         if (s == null) {
-            s = (new File(System.getProperty("user.dir"))).getParent();
+            s = new File(System.getProperty("user.dir")).getParent();
         }
         if (s != null && !s.endsWith("/")) s = s + "/";
         if (s != null && !s.startsWith("/")) s = "/" + s;
-        return s;
-    }
-
-    private static String getRootUrl() {
-        String s = Jenkins.get().getRootUrl();
-        if (s == null) {
-            s = JenkinsLocationConfiguration.get().getUrl();
-        }
-        // other methods just return null, done just for running under developer mode
-        // hardcoded and obviously working only when jenkins runs on 8080
-        // info
-        // https://wiki.jenkins-ci.org/display/JENKINS/Hyperlinks+in+HTML
-        if (s == null) {
-            s = "http://localhost:8080/jenkins";
-        }
-        if (s != null && !s.endsWith("/")) s = s + "/";
         return s;
     }
 }
