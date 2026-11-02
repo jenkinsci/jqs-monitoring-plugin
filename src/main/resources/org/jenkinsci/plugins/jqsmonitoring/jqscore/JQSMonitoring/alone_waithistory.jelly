@@ -1,0 +1,61 @@
+<?jelly escape-by-default='true'?>
+<j:jelly
+    xmlns:j="jelly:core"
+    xmlns:st="jelly:stapler"
+    xmlns:l="/lib/layout">
+
+    <l:layout title="${%Wait History}">
+
+        <st:include page="sidepanel.jelly" />
+
+        <l:main-panel>
+            <h1>${%Wait History}</h1>
+
+            <p>
+                ${%History of jobs that have left the build queue and started executing.}
+            </p>
+
+            <j:choose>
+                <j:when test="${it.getWaitHistory() == null || it.getWaitHistory().getEntries().isEmpty()}">
+                    <p>${%No wait history available.}</p>
+                </j:when>
+
+                <j:otherwise>
+                    <table class="pane">
+                        <thead>
+                            <tr>
+                                <th>${%Status}</th>
+                                <th>${%Build}</th>
+                                <th>${%Block cause}</th>
+                                <th>${%Wait time}</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <j:forEach
+                                var="entry"
+                                items="${it.getWaitHistory().getEntries()}">
+
+                                <tr>
+                                    <td>${entry.getStatus()}</td>
+
+                                    <td>
+                                        <a href="${rootURL}/${entry.getUrl()}">
+                                            ${entry.getName()}
+                                        </a>
+                                    </td>
+
+                                    <td>${entry.getCauseOfBlockage()}</td>
+
+                                    <td>${entry.getWaitTime()}</td>
+                                </tr>
+
+                            </j:forEach>
+                        </tbody>
+                    </table>
+                </j:otherwise>
+            </j:choose>
+        </l:main-panel>
+
+    </l:layout>
+</j:jelly>
