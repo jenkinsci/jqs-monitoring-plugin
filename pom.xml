@@ -17,6 +17,14 @@
   <name>Job/Queue/Agents Monitoring Plugin</name>
   <url>https://plugins.jenkins.io/jqs-monitoring/</url>
 
+  <licenses>
+      <license>
+          <name>MIT License</name>
+          <url>https://opensource.org/license/mit</url>
+          <distribution>repo</distribution>
+      </license>
+  </licenses>
+
   <scm>
     <connection>scm:git:https://github.com/jenkinsci/jqs-monitoring-plugin.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/jenkinsci/jqs-monitoring-plugin.git</developerConnection>
