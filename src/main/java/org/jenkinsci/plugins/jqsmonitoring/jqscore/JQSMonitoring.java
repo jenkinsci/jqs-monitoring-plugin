@@ -1,30 +1,27 @@
 package org.jenkinsci.plugins.jqsmonitoring.jqscore;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.servlet.ServletException;
-
 import hudson.Extension;
-import hudson.model.RootAction;
 import hudson.model.Api;
 import hudson.model.Hudson;
-
+import hudson.model.RootAction;
+import jakarta.servlet.ServletException;
+import java.io.IOException;
+import java.util.ArrayList;
 import jenkins.model.Jenkins;
 import org.jenkinsci.plugins.jqsmonitoring.beingbuilt.RunningJob;
 import org.jenkinsci.plugins.jqsmonitoring.buildqueue.BuildQueue;
 import org.jenkinsci.plugins.jqsmonitoring.failedbuilds.FailHistory;
 import org.jenkinsci.plugins.jqsmonitoring.slaves.SlavesHolder;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
 /**
  * Main class of the Plugin. Extension Point.
- * 
+ *
  * @author yboev
- * 
+ *
  */
 @ExportedBean
 @Extension
@@ -47,7 +44,7 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * REST API.
-     * 
+     *
      * @return new api instance.
      */
     public Api getApi() {
@@ -67,7 +64,7 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * Returns the icon url for this plugin.
-     * 
+     *
      * @return the icon file name.
      */
     @Exported
@@ -80,7 +77,7 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * Returns the url for this plugin.
-     * 
+     *
      * @return the url name.
      */
     @Exported
@@ -90,10 +87,10 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * Refreshes and returns the instance of BuildQueue.
-     * 
+     *
      * @return the BuildQueue instance
      */
-    @Exported(inline=true)
+    @Exported(inline = true)
     public BuildQueue getBuildQueue() {
         this.buildQueue.refresh();
         return this.buildQueue;
@@ -101,7 +98,7 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * Returns the root url for this plugin.
-     * 
+     *
      * @return the url.
      */
     @Exported
@@ -112,7 +109,7 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * Returns the icons url for this plugin.
-     * 
+     *
      * @return the url where icons can be found.
      */
     @Exported
@@ -122,7 +119,7 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * Returns the number of all jobs in Jenkins/Hudson.
-     * 
+     *
      * @return the jobs count
      */
     @Exported
@@ -132,13 +129,12 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * Returns a list of jobs that have been running for too long.
-     * 
+     *
      * @return list with the jobs.
      */
-    @Exported(inline=true)
+    @Exported(inline = true)
     public ArrayList<RunningJob> getJobsRunningTooLong() {
-        return RunningJob.getJobsRunningTooLong(SlavesHolder.getInstance()
-                .getSlaves());
+        return RunningJob.getJobsRunningTooLong(SlavesHolder.getInstance().getSlaves());
     }
 
     /*
@@ -149,17 +145,17 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * Returns the instance of FailHistory.
-     * 
+     *
      * @return the instance
      */
-    @Exported(inline=true)
+    @Exported(inline = true)
     public FailHistory getFailHistory() {
         return this.failedHistory;
     }
 
     /**
      * Returns the address of the failed-jobs histogram.
-     * 
+     *
      * @return the address
      */
     @Exported
@@ -170,7 +166,7 @@ public class JQSMonitoring implements RootAction {
     /**
      * Accepts the parameters from the local configuration page and passes them
      * on to LocalConfig class.
-     * 
+     *
      * @param req
      *            Request
      * @param rsp
@@ -178,8 +174,7 @@ public class JQSMonitoring implements RootAction {
      * @throws IOException
      *             input/ouput
      */
-    public void doConfigSubmit(StaplerRequest req, StaplerResponse rsp)
-            throws IOException, ServletException {
+    public void doConfigSubmit(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         if (!this.hasPermission()) {
             return;
         }
@@ -191,14 +186,13 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * Sets the default values for the configuration.
-     * 
+     *
      * @param req
      *            Request
      * @param rsp
      *            Response
      */
-    public void doSetDefaults(StaplerRequest req, StaplerResponse rsp)
-            throws IOException, ServletException {
+    public void doSetDefaults(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         if (!this.hasPermission()) {
             return;
         }
@@ -210,7 +204,7 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * Returns an instance of the configuration.
-     * 
+     *
      * @return a configuration instance.
      */
     public LocalConfig getLocalConfig() {
@@ -219,10 +213,10 @@ public class JQSMonitoring implements RootAction {
 
     /**
      * Returns an instance of the SlavesHolder.
-     * 
+     *
      * @return the instance.
      */
-    @Exported(inline=true)
+    @Exported(inline = true)
     public SlavesHolder getSlavesHolder() {
         return SlavesHolder.getInstance();
     }
@@ -250,5 +244,4 @@ public class JQSMonitoring implements RootAction {
     private void refreshFailGraphic() {
         this.failedHistory.createHourGraphic1();
     }
-
 }

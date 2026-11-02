@@ -1,22 +1,19 @@
 package org.jenkinsci.plugins.jqsmonitoring.jqscore;
 
+import com.thoughtworks.xstream.mapper.CannotResolveClassException;
+import hudson.XmlFile;
+import hudson.model.Hudson;
+import hudson.model.Saveable;
 import java.io.File;
 import java.io.IOException;
-
-import com.thoughtworks.xstream.mapper.CannotResolveClassException;
-
 import net.sf.json.JSONObject;
-
-import hudson.XmlFile;
-import hudson.model.Saveable;
-import hudson.model.Hudson;
 
 /**
  * Implements the mothods needed for the local config page. Saves the
  * information in a XML-file.
- * 
+ *
  * @author yboev
- * 
+ *
  */
 public class LocalConfig implements Saveable {
 
@@ -63,21 +60,16 @@ public class LocalConfig implements Saveable {
     }
 
     public void changeIt(JSONObject jfile) {
-        this.updateFailedDaily = Integer.parseInt(jfile
-                .getString("updatefaileddaily"));
-        this.histogramWith = Integer.parseInt(jfile.getString("histwidth")
-                .trim());
-        this.histogramHeight = Integer.parseInt(jfile.getString("histheight")
-                .trim());
+        this.updateFailedDaily = Integer.parseInt(jfile.getString("updatefaileddaily"));
+        this.histogramWith = Integer.parseInt(jfile.getString("histwidth").trim());
+        this.histogramHeight = Integer.parseInt(jfile.getString("histheight").trim());
 
         this.allQS = jfile.getString("allqs").trim().equals("true");
-        this.queueJobTable = jfile.getString("queuejobstable").trim()
-                .equals("true");
+        this.queueJobTable = jfile.getString("queuejobstable").trim().equals("true");
         this.buildTable = jfile.getString("buildtable").trim().equals("true");
         this.slaveTable = jfile.getString("slavetable").trim().equals("true");
         this.allFailed = jfile.getString("allfailed").trim().equals("true");
-        this.failedHistogram = jfile.getString("failedhistogram").trim()
-                .equals("true");
+        this.failedHistogram = jfile.getString("failedhistogram").trim().equals("true");
 
         this.allColor = jfile.getString("allColor").trim();
         this.okColor = jfile.getString("okColor").trim();
@@ -89,14 +81,11 @@ public class LocalConfig implements Saveable {
         this.histHourText = jfile.getString("histHourText").trim();
         this.histNumberText = jfile.getString("histNumberText").trim();
         this.histCurrentColumn = jfile.getString("histCurrentColumn").trim();
-        this.histSorting = Integer.parseInt(jfile.getString("histSorting")
-                .trim());
+        this.histSorting = Integer.parseInt(jfile.getString("histSorting").trim());
 
-        this.timeFilter_1 = Integer.parseInt(jfile.getString("timeFilter_1")
-                .trim());
+        this.timeFilter_1 = Integer.parseInt(jfile.getString("timeFilter_1").trim());
 
-        this.timeFilter_2 = Integer.parseInt(jfile.getString("timeFilter_2")
-                .trim());
+        this.timeFilter_2 = Integer.parseInt(jfile.getString("timeFilter_2").trim());
 
         try {
             save();
@@ -210,14 +199,14 @@ public class LocalConfig implements Saveable {
         this.allFailed = true;
         this.failedHistogram = true;
 
-        this.allColor = "#" + "0099FF";// (Integer.toHexString(Color.BLUE.getRGB()).substring(2,
-                                       // 7));
-        this.okColor = "#" + "66CC00";// (Integer.toHexString(Color.GREEN.getRGB()).substring(2,
-                                      // 7));
-        this.blockedColor = "#" + "FF9900";// (Integer.toHexString(Color.ORANGE.getRGB()).substring(2,
-                                           // 7));
-        this.stuckColor = "#" + "FF0033";// (Integer.toHexString(Color.RED.getRGB()).substring(2,
-                                         // 7));
+        this.allColor = "#" + "0099FF"; // (Integer.toHexString(Color.BLUE.getRGB()).substring(2,
+        // 7));
+        this.okColor = "#" + "66CC00"; // (Integer.toHexString(Color.GREEN.getRGB()).substring(2,
+        // 7));
+        this.blockedColor = "#" + "FF9900"; // (Integer.toHexString(Color.ORANGE.getRGB()).substring(2,
+        // 7));
+        this.stuckColor = "#" + "FF0033"; // (Integer.toHexString(Color.RED.getRGB()).substring(2,
+        // 7));
 
         this.histBackground = "#FFFFFF";
         this.histColumn = "#000000";
@@ -245,7 +234,7 @@ public class LocalConfig implements Saveable {
             XmlFile xml = getConfigXml();
             if (xml.exists()) {
                 xml.unmarshal(this); // Loads the contents of this file into an
-                                     // existing object.
+                // existing object.
                 return true;
             }
         } catch (CannotResolveClassException e) {

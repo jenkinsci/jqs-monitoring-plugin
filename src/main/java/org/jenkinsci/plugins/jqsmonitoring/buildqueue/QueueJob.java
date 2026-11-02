@@ -1,25 +1,22 @@
 package org.jenkinsci.plugins.jqsmonitoring.buildqueue;
 
+import hudson.model.Api;
+import hudson.model.Queue;
+import hudson.model.queue.CauseOfBlockage;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
-
 import org.jenkinsci.plugins.jqsmonitoring.jqscore.Constants;
 import org.jenkinsci.plugins.jqsmonitoring.jqscore.LocalConfig;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
-
-import hudson.model.Api;
-import hudson.model.Queue;
-import hudson.model.queue.CauseOfBlockage;
-
 /**
  * Stores attributes and functions of a queue job. Implements the interface
  * Comparable for sorting the jobs currently waiting in the queue according to
  * their wait time.
- * 
+ *
  * @author yboev
- * 
+ *
  */
 @ExportedBean
 public class QueueJob implements Comparable<QueueJob> {
@@ -34,56 +31,57 @@ public class QueueJob implements Comparable<QueueJob> {
     private String color;
     private String url;
 
-    private static final Logger LOGGER = Logger.getLogger(QueueJob.class
-            .getName());
-
     /**
      * Constructor.
-     * 
+     *
      * @param item
      *            the job(item) waiting in the queue
      * @param currentTime
      *            the current time on which all items have been retrieved
      */
     public QueueJob(Queue.BuildableItem item, long currentTime) {
+        if (item == null || item.task == null) {
+            throw new IllegalArgumentException("Queue item and task must not be null");
+        }
 
         this.name = item.task.getDisplayName();
-        // calulates the time files of a given job from a single number in
-        // miliseons
-        this.time_ms = currentTime - (item.buildableStartMilliseconds);
+
+        this.time_ms = currentTime - item.buildableStartMilliseconds;
         long time = this.time_ms;
+
         this.days = TimeUnit.MILLISECONDS.toDays(time);
         time -= TimeUnit.DAYS.toMillis(this.days);
+
         this.hours = TimeUnit.MILLISECONDS.toHours(time);
         time -= TimeUnit.HOURS.toMillis(this.hours);
+
         this.mins = TimeUnit.MILLISECONDS.toMinutes(time);
         time -= TimeUnit.MINUTES.toMillis(this.mins);
+
         this.secs = TimeUnit.MILLISECONDS.toSeconds(time);
         this.url = item.task.getUrl();
 
-        try {
-            this.causeOfBlockage = item.getCauseOfBlockage();
-        } catch (NullPointerException e) {
-            LOGGER.info("Exception :(");
-        }
+        this.causeOfBlockage = item.getCauseOfBlockage();
 
-        // sets the color of a job, according to its status
         final LocalConfig lc = new LocalConfig();
+
         this.status = Constants.STATUS1;
         this.color = lc.getOkColor();
+
         if (item.isBlocked()) {
             this.status = Constants.STATUS2;
             this.color = lc.getBlockedColor();
         }
+
         if (item.isStuck()) {
             this.status = Constants.STATUS3;
             this.color = lc.getStuckColor();
         }
     }
-    
+
     /**
      * REST API
-     * 
+     *
      * @return the api.
      */
     public Api getApi() {
@@ -92,7 +90,7 @@ public class QueueJob implements Comparable<QueueJob> {
 
     /**
      * Returns the status of this queue job. Options: "ok", "blocked", "stuck"
-     * 
+     *
      * @return the status
      */
     @Exported
@@ -102,7 +100,7 @@ public class QueueJob implements Comparable<QueueJob> {
 
     /**
      * Returns ID of the waiting job.
-     * 
+     *
      * @return the ID
      */
     @Exported
@@ -113,7 +111,7 @@ public class QueueJob implements Comparable<QueueJob> {
     /**
      * Color Returns the time which a job has spend in the queue waiting as a
      * formate String.
-     * 
+     *
      * @return the formated String
      */
     @Exported
@@ -137,7 +135,7 @@ public class QueueJob implements Comparable<QueueJob> {
 
     /**
      * Color to be used for this job.
-     * 
+     *
      * @return the color as String
      */
     @Exported
@@ -145,37 +143,64 @@ public class QueueJob implements Comparable<QueueJob> {
         // LOGGER.info("Color is:" + "#" +
         // Integer.toHexString(this.color.getRGB()));
         return this.color; // "#" +
-                           // (Integer.toHexString(this.color.getRGB()).substring(2,
-                           // 7));
+        // (Integer.toHexString(this.color.getRGB()).substring(2,
+        // 7));
     }
 
     /**
      * Implementation of the comparing method.
      */
+    @Override
     public int compareTo(QueueJob qj) {
-        if (this.status == qj.status) {
-            if (qj.time_ms > this.time_ms) {
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-        if (this.status == Constants.STATUS3) {
+        if (qj == null) {
             return 1;
         }
-        if (this.status == Constants.STATUS1) {
-            return -1;
+
+        int statusComparison = Integer.compare(getStatusPriority(this.status), getStatusPriority(qj.status));
+
+        if (statusComparison != 0) {
+            return statusComparison;
         }
-        if (this.status == Constants.STATUS2 && qj.status == Constants.STATUS1) {
+
+        return Long.compare(qj.time_ms, this.time_ms);
+    }
+
+    private int getStatusPriority(String status) {
+        if (Constants.STATUS1.equals(status)) {
+            return 0;
+        }
+        if (Constants.STATUS2.equals(status)) {
             return 1;
-        } else {
-            return -1;
         }
+        if (Constants.STATUS3.equals(status)) {
+            return 2;
+        }
+        return 3;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof QueueJob)) {
+            return false;
+        }
+
+        QueueJob other = (QueueJob) obj;
+
+        return time_ms == other.time_ms && Objects.equals(status, other.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(status, time_ms);
     }
 
     /**
      * Returns the icon for this queue job.
-     * 
+     *
      * @return address of the icon
      */
     @Exported
@@ -191,7 +216,7 @@ public class QueueJob implements Comparable<QueueJob> {
         }
         return "";
     }
-    
+
     /**
      * Returns the url for this queue job.
      * @return the url as string.
