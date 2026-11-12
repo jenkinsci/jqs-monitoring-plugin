@@ -12,6 +12,7 @@ import org.jenkinsci.plugins.jqsmonitoring.beingbuilt.RunningJob;
 import org.jenkinsci.plugins.jqsmonitoring.buildqueue.BuildQueue;
 import org.jenkinsci.plugins.jqsmonitoring.failedbuilds.FailHistory;
 import org.jenkinsci.plugins.jqsmonitoring.slaves.SlavesHolder;
+import org.jenkinsci.plugins.jqsmonitoring.waithistory.WaitHistory;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.export.Exported;
@@ -49,6 +50,15 @@ public class JQSMonitoring implements RootAction {
      */
     public Api getApi() {
         return new Api(this);
+    }
+
+    /**
+     * Returns the wait history.
+     *
+     * @return the wait history instance
+     */
+    public WaitHistory getWaitHistory() {
+        return WaitHistory.getInstance();
     }
 
     /**
